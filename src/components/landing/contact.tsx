@@ -1,8 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { motion } from "motion/react";
-import { Instagram, Linkedin, Loader2, Mail, MapPin, MessageCircle, Send } from "lucide-react";
+import {
+  Github,
+  Instagram,
+  Linkedin,
+  Loader2,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Send,
+} from "lucide-react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -41,15 +50,25 @@ export function Contact({ profile }: { profile: Profile }) {
   });
 
   const info = [
-    { icon: Mail, label: "Email", value: profile.email, href: `mailto:${profile.email}` },
+    {
+      icon: Mail,
+      label: "Email",
+      value: profile.email,
+      href: `mailto:${profile.email}`,
+    },
     { icon: MapPin, label: "Lokasi", value: profile.location, href: undefined },
-    { icon: MessageCircle, label: "WhatsApp", value: "Chat langsung", href: profile.socials.whatsapp },
+    {
+      icon: MessageCircle,
+      label: "WhatsApp",
+      value: "Chat langsung",
+      href: profile.socials.whatsapp,
+    },
   ];
 
   const socials = [
     { icon: Linkedin, href: profile.socials.linkedin, label: "LinkedIn" },
     { icon: Instagram, href: profile.socials.instagram, label: "Instagram" },
-    { icon: GithubLite, href: profile.socials.github, label: "GitHub" },
+    { icon: Github, href: profile.socials.github, label: "GitHub" },
   ];
 
   return (
@@ -57,7 +76,7 @@ export function Contact({ profile }: { profile: Profile }) {
       <SectionHeading
         eyebrow="Mari bekerja sama"
         title="Punya ide atau kebutuhan proyek?"
-        description="Ceritakan briefly proyekmu — saya balas biasanya dalam 1x24 jam."
+        description="Ceritakan sedikit kebutuhanmu — biasanya saya balas dalam 1x24 jam."
       />
 
       <div className="mt-14 grid gap-8 lg:grid-cols-[1fr_380px]">
@@ -82,7 +101,12 @@ export function Contact({ profile }: { profile: Profile }) {
                 <label htmlFor="email" className="mb-2 block text-sm font-medium">
                   Email
                 </label>
-                <Input id="email" type="email" placeholder="nama@perusahaan.com" {...register("email")} />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="nama@perusahaan.com"
+                  {...register("email")}
+                />
                 {errors.email ? (
                   <p className="mt-2 text-xs text-destructive">{errors.email.message}</p>
                 ) : null}
@@ -125,27 +149,36 @@ export function Contact({ profile }: { profile: Profile }) {
 
         <Reveal delay={0.12}>
           <div className="flex h-full flex-col gap-4">
-            {info.map((item) => {
-              const Wrapper = item.href ? "a" : "div";
-              return (
-                <motion.div whileHover={{ x: 4 }} key={item.label}>
-                  <Wrapper
-                    {...(item.href
-                      ? { href: item.href, target: "_blank", rel: "noreferrer" }
-                      : {})}
-                    className="glow-ring flex items-center gap-4 rounded-2xl border border-border bg-surface p-5"
-                  >
-                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-brand text-primary-foreground">
-                      <item.icon className="size-4" />
-                    </span>
-                    <span>
-                      <span className="block text-xs text-muted-foreground">{item.label}</span>
-                      <span className="block text-sm font-medium">{item.value}</span>
-                    </span>
-                  </Wrapper>
+            {info.map((item) =>
+              item.href ? (
+                <motion.a
+                  key={item.label}
+                  whileHover={{ x: 4 }}
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="glow-ring flex items-center gap-4 rounded-2xl border border-border bg-surface p-5"
+                >
+                  <InfoIcon icon={item.icon} />
+                  <span>
+                    <span className="block text-xs text-muted-foreground">{item.label}</span>
+                    <span className="block text-sm font-medium">{item.value}</span>
+                  </span>
+                </motion.a>
+              ) : (
+                <motion.div
+                  key={item.label}
+                  whileHover={{ x: 4 }}
+                  className="glow-ring flex items-center gap-4 rounded-2xl border border-border bg-surface p-5"
+                >
+                  <InfoIcon icon={item.icon} />
+                  <span>
+                    <span className="block text-xs text-muted-foreground">{item.label}</span>
+                    <span className="block text-sm font-medium">{item.value}</span>
+                  </span>
                 </motion.div>
-              );
-            })}
+              ),
+            )}
 
             <div className="mt-auto rounded-2xl border border-border bg-surface p-5">
               <p className="text-sm text-muted-foreground">
@@ -173,8 +206,10 @@ export function Contact({ profile }: { profile: Profile }) {
   );
 }
 
-function GithubLite(props: { className?: string }) {
-  return <Github className={props.className} />;
+function InfoIcon({ icon: Icon }: { icon: typeof Mail }) {
+  return (
+    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-brand text-primary-foreground">
+      <Icon className="size-4" />
+    </span>
+  );
 }
-
-import { Github } from "lucide-react";

@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { ExternalCircle, Menu } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { AppSidebar, adminNav } from "@/components/admin/app-sidebar";
@@ -68,7 +68,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link to="/">
-                  <ExternalCircle className="mr-2 size-4" /> Buka situs publik
+                  <ExternalLink className="mr-2 size-4" /> Buka situs publik
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>

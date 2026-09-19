@@ -150,9 +150,9 @@ function LoginPage() {
             ) : null}
           </div>
 
-          <Button type="submit" className="w-full shadow-glow" disabled={isSubmitting}>
+          <Button type="submit" className="w-full shadow-glow" disabled={!ready || isSubmitting}>
             {isSubmitting ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
-            {isSubmitting ? "Memeriksa…" : "Masuk"}
+            {!ready ? "Menyiapkan…" : isSubmitting ? "Memeriksa…" : "Masuk"}
           </Button>
         </form>
 

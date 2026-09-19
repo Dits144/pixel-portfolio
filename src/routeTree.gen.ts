@@ -13,8 +13,13 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminCoverLetterRouteImport } from './routes/admin.cover-letter'
+import { Route as AdminExperiencesRouteImport } from './routes/admin.experiences'
+import { Route as AdminMessagesRouteImport } from './routes/admin.messages'
 import { Route as AdminProfileRouteImport } from './routes/admin.profile'
+import { Route as AdminProjectsRouteImport } from './routes/admin.projects'
 import { Route as AdminSkillsRouteImport } from './routes/admin.skills'
+import { Route as AdminTestimonialsRouteImport } from './routes/admin.testimonials'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -36,9 +41,29 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminCoverLetterRoute = AdminCoverLetterRouteImport.update({
+  id: '/cover-letter',
+  path: '/cover-letter',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminExperiencesRoute = AdminExperiencesRouteImport.update({
+  id: '/experiences',
+  path: '/experiences',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMessagesRoute = AdminMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminProfileRoute = AdminProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProjectsRoute = AdminProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminSkillsRoute = AdminSkillsRouteImport.update({
@@ -46,20 +71,35 @@ const AdminSkillsRoute = AdminSkillsRouteImport.update({
   path: '/skills',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminTestimonialsRoute = AdminTestimonialsRouteImport.update({
+  id: '/testimonials',
+  path: '/testimonials',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
+  '/admin/cover-letter': typeof AdminCoverLetterRoute
+  '/admin/experiences': typeof AdminExperiencesRoute
+  '/admin/messages': typeof AdminMessagesRoute
   '/admin/profile': typeof AdminProfileRoute
+  '/admin/projects': typeof AdminProjectsRoute
   '/admin/skills': typeof AdminSkillsRoute
+  '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/admin/cover-letter': typeof AdminCoverLetterRoute
+  '/admin/experiences': typeof AdminExperiencesRoute
+  '/admin/messages': typeof AdminMessagesRoute
   '/admin/profile': typeof AdminProfileRoute
+  '/admin/projects': typeof AdminProjectsRoute
   '/admin/skills': typeof AdminSkillsRoute
+  '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
@@ -67,23 +107,53 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
+  '/admin/cover-letter': typeof AdminCoverLetterRoute
+  '/admin/experiences': typeof AdminExperiencesRoute
+  '/admin/messages': typeof AdminMessagesRoute
   '/admin/profile': typeof AdminProfileRoute
+  '/admin/projects': typeof AdminProjectsRoute
   '/admin/skills': typeof AdminSkillsRoute
+  '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/admin' | '/login' | '/admin/profile' | '/admin/skills' | '/admin/'
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/admin/cover-letter'
+    | '/admin/experiences'
+    | '/admin/messages'
+    | '/admin/profile'
+    | '/admin/projects'
+    | '/admin/skills'
+    | '/admin/testimonials'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/admin/profile' | '/admin/skills' | '/admin'
+  to:
+    | '/'
+    | '/login'
+    | '/admin/cover-letter'
+    | '/admin/experiences'
+    | '/admin/messages'
+    | '/admin/profile'
+    | '/admin/projects'
+    | '/admin/skills'
+    | '/admin/testimonials'
+    | '/admin'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/login'
+    | '/admin/cover-letter'
+    | '/admin/experiences'
+    | '/admin/messages'
     | '/admin/profile'
+    | '/admin/projects'
     | '/admin/skills'
+    | '/admin/testimonials'
     | '/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -123,11 +193,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/cover-letter': {
+      id: '/admin/cover-letter'
+      path: '/cover-letter'
+      fullPath: '/admin/cover-letter'
+      preLoaderRoute: typeof AdminCoverLetterRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/experiences': {
+      id: '/admin/experiences'
+      path: '/experiences'
+      fullPath: '/admin/experiences'
+      preLoaderRoute: typeof AdminExperiencesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/messages': {
+      id: '/admin/messages'
+      path: '/messages'
+      fullPath: '/admin/messages'
+      preLoaderRoute: typeof AdminMessagesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/profile': {
       id: '/admin/profile'
       path: '/profile'
       fullPath: '/admin/profile'
       preLoaderRoute: typeof AdminProfileRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/projects': {
+      id: '/admin/projects'
+      path: '/projects'
+      fullPath: '/admin/projects'
+      preLoaderRoute: typeof AdminProjectsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/skills': {
@@ -137,18 +235,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSkillsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/testimonials': {
+      id: '/admin/testimonials'
+      path: '/testimonials'
+      fullPath: '/admin/testimonials'
+      preLoaderRoute: typeof AdminTestimonialsRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminCoverLetterRoute: typeof AdminCoverLetterRoute
+  AdminExperiencesRoute: typeof AdminExperiencesRoute
+  AdminMessagesRoute: typeof AdminMessagesRoute
   AdminProfileRoute: typeof AdminProfileRoute
+  AdminProjectsRoute: typeof AdminProjectsRoute
   AdminSkillsRoute: typeof AdminSkillsRoute
+  AdminTestimonialsRoute: typeof AdminTestimonialsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminCoverLetterRoute: AdminCoverLetterRoute,
+  AdminExperiencesRoute: AdminExperiencesRoute,
+  AdminMessagesRoute: AdminMessagesRoute,
   AdminProfileRoute: AdminProfileRoute,
+  AdminProjectsRoute: AdminProjectsRoute,
   AdminSkillsRoute: AdminSkillsRoute,
+  AdminTestimonialsRoute: AdminTestimonialsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 

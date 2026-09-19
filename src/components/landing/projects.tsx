@@ -91,12 +91,18 @@ export function Projects({ projects }: { projects: Project[] }) {
                 className="glow-ring group overflow-hidden rounded-2xl border border-border bg-card shadow-card"
               >
                 <div className="relative aspect-[16/10] overflow-hidden">
-                  <img
-                    src={project.thumbnail}
-                    alt={`Tangkapan layar proyek ${project.title}`}
-                    loading="lazy"
-                    className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
+                  {project.thumbnail ? (
+                    <img
+                      src={project.thumbnail}
+                      alt={`Tangkapan layar proyek ${project.title}`}
+                      loading="lazy"
+                      className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="grid size-full place-items-center bg-surface font-mono text-xs text-muted-foreground">
+                      {project.title}
+                    </div>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/10 to-transparent" />
 
                   {project.featured ? (

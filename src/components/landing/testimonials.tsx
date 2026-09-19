@@ -30,6 +30,7 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
 
   if (!testimonials.length) return null;
   const active = testimonials[Math.min(index, testimonials.length - 1)];
+  if (!active) return null;
 
   return (
     <Section id="testimonials">

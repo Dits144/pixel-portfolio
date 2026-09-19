@@ -1,5 +1,5 @@
 import { Loader2, TriangleAlert } from "lucide-react";
-import type { ReactNode } from "react";
+import type { FormEventHandler, ReactNode } from "react";
 
 import {
   AlertDialog,
@@ -90,7 +90,7 @@ export function FormDialog({
   title: string;
   description?: string;
   isPending: boolean;
-  onSubmit: (event: { preventDefault: () => void }) => void;
+  onSubmit: FormEventHandler<HTMLFormElement>;
   submitLabel: string;
   children: ReactNode;
 }) {

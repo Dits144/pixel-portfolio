@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, type LinkProps } from "@tanstack/react-router";
 import {
   ArrowRight,
   Briefcase,
@@ -36,7 +36,7 @@ function StatCard({
   label: string;
   value: number | string;
   hint: string;
-  to: string;
+  to: LinkProps["to"];
 }) {
   return (
     <Link

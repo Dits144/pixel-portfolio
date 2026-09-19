@@ -34,7 +34,6 @@ import { cn } from "@/lib/utils";
 
 export const adminNav = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
-
   { title: "Profil", url: "/admin/profile", icon: UserCog },
   { title: "Skill", url: "/admin/skills", icon: Wrench },
   { title: "Proyek", url: "/admin/projects", icon: FolderGit2 },
@@ -42,7 +41,7 @@ export const adminNav = [
   { title: "Testimoni", url: "/admin/testimonials", icon: Quote },
   { title: "Pesan", url: "/admin/messages", icon: Inbox },
   { title: "Surat Lamaran AI", url: "/admin/cover-letter", icon: Sparkles },
-];
+] as const;
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (router) => router.location.pathname });

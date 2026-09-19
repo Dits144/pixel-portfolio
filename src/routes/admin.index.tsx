@@ -198,11 +198,11 @@ function DashboardPage() {
         </div>
       </div>
 
-      <p className="mt-6 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+      <div className="mt-6 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
         <Badge variant="outline">mock data</Badge>
         Ganti isi file di folder services dengan fetch() ke REST API milikmu — komponen UI
         tidak perlu diubah.
-      </p>
+      </div>
     </div>
   );
 }

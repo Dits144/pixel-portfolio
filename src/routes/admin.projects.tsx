@@ -132,12 +132,18 @@ function ProjectsPage() {
               key={project.id}
               className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-4 shadow-card sm:flex-row sm:items-center"
             >
-              <img
-                src={project.thumbnail}
-                alt=""
-                loading="lazy"
-                className="h-24 w-full shrink-0 rounded-xl object-cover sm:h-16 sm:w-28"
-              />
+              {project.thumbnail ? (
+                <img
+                  src={project.thumbnail}
+                  alt=""
+                  loading="lazy"
+                  className="h-24 w-full shrink-0 rounded-xl object-cover sm:h-16 sm:w-28"
+                />
+              ) : (
+                <div className="grid h-24 w-full shrink-0 place-items-center rounded-xl border border-dashed border-border bg-surface font-mono text-[10px] text-muted-foreground sm:h-16 sm:w-28">
+                  tanpa gambar
+                </div>
+              )}
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className="font-display font-semibold">{project.title}</h3>

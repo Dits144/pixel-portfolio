@@ -200,7 +200,7 @@ export default function CoverLetterPage() {
                   </Button>
                   <Button
                     size="sm"
-                    onClick={() => saveLetter.mutate()}
+                    onClick={() => saveLetter.mutate(undefined)}
                     disabled={saveLetter.isPending}
                   >
                     {saveLetter.isPending ? (

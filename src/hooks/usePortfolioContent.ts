@@ -39,7 +39,7 @@ export function usePortfolioContent() {
       ]);
       return { profile, skills, projects, experiences, testimonials, articles };
     },
-    placeholderData,
+    placeholderData: initialPortfolioData,
     staleTime: 30_000,
   });
 }

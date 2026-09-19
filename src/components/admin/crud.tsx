@@ -90,7 +90,7 @@ export function FormDialog({
   title: string;
   description?: string;
   isPending: boolean;
-  onSubmit: () => void;
+  onSubmit: (event: { preventDefault: () => void }) => void;
   submitLabel: string;
   children: ReactNode;
 }) {

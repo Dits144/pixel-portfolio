@@ -74,16 +74,6 @@ export function AdminShell({ children }: { children: ReactNode }) {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Trigger cadangan saat sidebar mobile tertutup */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            aria-label="Buka navigasi admin"
-            onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "[" }))}
-          >
-            <Menu className="size-4" />
-          </Button>
         </header>
 
         <main className="min-w-0 flex-1 overflow-x-hidden p-4 sm:p-6">{children}</main>

@@ -13,7 +13,7 @@ function useTypingEffect(words: string[]) {
 
   useEffect(() => {
     if (!words.length) return;
-    const current = words[index % words.length];
+    const current = words[index % words.length] ?? "";
     const done = !deleting && text === current;
     const cleared = deleting && text === "";
 

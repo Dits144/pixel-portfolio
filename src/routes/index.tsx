@@ -45,6 +45,7 @@ export const Route = createFileRoute("/")({
 
 function LandingPage() {
   const { data } = usePortfolioContent();
+  if (!data) return null;
 
   return (
     <div className="min-h-screen bg-background">

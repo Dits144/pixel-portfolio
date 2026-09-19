@@ -36,7 +36,7 @@ function StatCard({
   label: string;
   value: number | string;
   hint: string;
-  to: LinkProps["to"];
+  to: NonNullable<LinkProps["to"]>;
 }) {
   return (
     <Link

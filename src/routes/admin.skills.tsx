@@ -240,7 +240,7 @@ function SkillsPage() {
             min={0}
             max={100}
             step={1}
-            onValueChange={([value]) => setDraft({ ...draft, percentage: value })}
+            onValueChange={([value]) => setDraft({ ...draft, percentage: value ?? 0 })}
           />
         </Field>
       </FormDialog>

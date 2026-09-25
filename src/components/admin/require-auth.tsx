@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { Navigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,15 +13,18 @@ import { useAuthStore } from "@/store/authStore";
 export function RequireAuth({ children }: { children: ReactNode }) {
   const user = useAuthStore((state) => state.user);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [ready, setReady] = useState(false);
 
-  useEffect(() => setReady(true), []);
+  useEffect(() => {
+    setReady(true);
+    if (!user) {
+      queryClient.clear();
+      navigate({ to: "/login" });
+    }
+  }, [user, navigate, queryClient]);
 
-  if (!ready) return <AdminBootSkeleton />;
-  if (!user) {
-    queryClient.clear();
-    return <Navigate to="/login" />;
-  }
+  if (!ready || !user) return <AdminBootSkeleton />;
   return <>{children}</>;
 }
 

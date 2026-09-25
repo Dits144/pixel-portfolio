@@ -1,6 +1,7 @@
 import { createFileRoute, Link, type LinkProps } from "@tanstack/react-router";
 import {
   ArrowRight,
+  Award,
   Briefcase,
   FolderGit2,
   Inbox,
@@ -14,6 +15,7 @@ import { PageHeader, TableSkeleton } from "@/components/admin/crud";
 import { useResource } from "@/hooks/useCrud";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { certificateService } from "@/services/certificateService";
 import { experienceService } from "@/services/experienceService";
 import { messageService } from "@/services/messageService";
 import { projectService } from "@/services/projectService";
@@ -59,6 +61,7 @@ function StatCard({
 function DashboardPage() {
   const projects = useResource("projects", projectService.list);
   const skills = useResource("skills", skillService.list);
+  const certificates = useResource("certificates", certificateService.list);
   const experiences = useResource("experiences", experienceService.list);
   const testimonials = useResource("testimonials", testimonialService.list);
   const messages = useResource("messages", messageService.list);
@@ -69,24 +72,31 @@ function DashboardPage() {
   return (
     <div>
       <PageHeader
-        title="Ringkasan portofolio"
-        description="Semua data masih disimpan lokal di peramban. Setiap kartu di bawah menuju halaman CRUD-nya."
+        title="Ringkasan Portofolio"
+        description="Panel kontrol pengelolaan konten Raditya.tech. Klik setiap kartu di bawah untuk membuka halaman pengelolaannya."
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <StatCard
+          icon={<Award className="size-5" />}
+          label="Sertifikat"
+          value={certificates.data?.length ?? 0}
+          hint="BNSP & Keamanan Siber"
+          to="/admin/certificates"
+        />
+        <StatCard
+          icon={<Wrench className="size-5" />}
+          label="Skill"
+          value={skills.data?.length ?? 0}
+          hint="termasuk Cyber Security"
+          to="/admin/skills"
+        />
         <StatCard
           icon={<FolderGit2 className="size-5" />}
           label="Proyek"
           value={projects.data?.length ?? 0}
           hint={`${featured.length} ditandai unggulan`}
           to="/admin/projects"
-        />
-        <StatCard
-          icon={<Wrench className="size-5" />}
-          label="Skill"
-          value={skills.data?.length ?? 0}
-          hint="dibagi per kategori"
-          to="/admin/skills"
         />
         <StatCard
           icon={<Briefcase className="size-5" />}

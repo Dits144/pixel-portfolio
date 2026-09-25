@@ -28,17 +28,38 @@ export const Route = createFileRoute("/admin/skills")({
   component: SkillsPage,
 });
 
-const categories: SkillCategory[] = ["Frontend", "Backend", "Database", "DevOps/Tools"];
+const categories: SkillCategory[] = [
+  "Cyber Security",
+  "Frontend",
+  "Backend",
+  "Database",
+  "DevOps/Tools",
+];
 const levels: SkillLevel[] = ["Beginner", "Intermediate", "Advanced", "Expert"];
+
+const cyberIcons = [
+  { icon: "🛡️", label: "Security" },
+  { icon: "🔒", label: "Lock/Hardening" },
+  { icon: "🦈", label: "Wireshark" },
+  { icon: "📡", label: "Network/Nmap" },
+  { icon: "🎯", label: "Penetration" },
+  { icon: "🔐", label: "Crypto" },
+  { icon: "🕵️", label: "Ethical Hacker" },
+  { icon: "💻", label: "Terminal" },
+  { icon: "🧱", label: "Firewall" },
+  { icon: "🌐", label: "Web Security" },
+  { icon: "⚡", label: "Performance" },
+  { icon: "🐳", label: "Docker" },
+];
 
 type Draft = Omit<Skill, "id">;
 
 const emptyDraft: Draft = {
   name: "",
-  category: "Frontend",
-  percentage: 80,
+  category: "Cyber Security",
+  percentage: 85,
   level: "Advanced",
-  icon: "⚡",
+  icon: "🛡️",
 };
 
 function SkillsPage() {
@@ -183,16 +204,38 @@ function SkillsPage() {
               id="skill-name"
               value={draft.name}
               onChange={(e) => setDraft({ ...draft, name: e.target.value })}
-              placeholder="mis. GraphQL"
+              placeholder="mis. Wireshark / Network Hardening"
             />
           </Field>
-          <Field label="Ikon" htmlFor="skill-icon" hint="Emoji singkat.">
+          <Field label="Ikon" htmlFor="skill-icon" hint="Pilih di bawah.">
             <Input
               id="skill-icon"
               value={draft.icon}
               onChange={(e) => setDraft({ ...draft, icon: e.target.value })}
             />
           </Field>
+        </div>
+
+        {/* Quick Icon Selector */}
+        <div className="rounded-xl border border-border/70 bg-surface/50 p-2.5">
+          <p className="mb-1.5 text-xs text-muted-foreground">Pilihan Ikon Cepat (Cyber Security & Dev):</p>
+          <div className="flex flex-wrap gap-1.5">
+            {cyberIcons.map((item) => (
+              <button
+                key={item.icon}
+                type="button"
+                onClick={() => setDraft({ ...draft, icon: item.icon })}
+                className={`flex size-8 items-center justify-center rounded-lg border text-base transition-all hover:scale-110 ${
+                  draft.icon === item.icon
+                    ? "border-primary bg-primary/20 shadow-sm"
+                    : "border-border bg-card hover:bg-accent"
+                }`}
+                title={item.label}
+              >
+                {item.icon}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">

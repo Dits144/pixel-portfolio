@@ -1,136 +1,155 @@
-import { AnimatePresence, motion } from "motion/react";
-import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import React, { useState } from 'react';
+import { Card } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Marquee } from '@/components/ui/3d-testimonails';
+import { Section, SectionHeading } from '@/components/landing/section';
+import { Star } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import type { Testimonial } from '@/types';
 
-import { Reveal, Section, SectionHeading } from "@/components/landing/section";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import type { Testimonial } from "@/types";
+function TestimonialCard({
+  name,
+  role,
+  content,
+  photo,
+  rating = 5,
+}: {
+  name: string;
+  role: string;
+  content: string;
+  photo?: string;
+  rating?: number;
+}) {
+  return (
+    <Card className="w-80 shrink-0 p-5 bg-card/85 backdrop-blur-md border-border/80 hover:border-primary/50 transition-all duration-300 hover:shadow-glow group">
+      <div className="flex items-center gap-3">
+        <Avatar className="h-10 w-10 border border-primary/30">
+          <AvatarImage src={photo} alt={name} />
+          <AvatarFallback className="bg-primary/10 text-primary font-semibold text-xs">
+            {name.slice(0, 2).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+        <div className="flex-1 overflow-hidden">
+          <p className="font-semibold text-sm text-foreground truncate group-hover:text-primary transition-colors">
+            {name}
+          </p>
+          <p className="text-xs text-muted-foreground truncate">{role}</p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-1 mt-3" aria-label={`Rating ${rating} dari 5`}>
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Star
+            key={i}
+            className={cn(
+              "size-3.5",
+              i < rating ? "fill-warning text-warning" : "text-muted-foreground/30",
+            )}
+          />
+        ))}
+      </div>
+
+      <p className="mt-3 text-sm text-muted-foreground leading-relaxed line-clamp-4 group-hover:text-foreground/90 transition-colors">
+        “{content}”
+      </p>
+    </Card>
+  );
+}
 
 export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) {
-  const [[index, direction], setState] = useState<[number, number]>([0, 0]);
-  const [paused, setPaused] = useState(false);
+  if (!testimonials || !testimonials.length) return null;
 
-  const go = useCallback(
-    (step: number) => {
-      if (!testimonials.length) return;
-      setState(([current]) => [
-        (current + step + testimonials.length) % testimonials.length,
-        step,
-      ]);
-    },
-    [testimonials.length],
-  );
+  // Split testimonials across 4 marquee columns
+  const col1 = testimonials.filter((_, i) => i % 4 === 0);
+  const col2 = testimonials.filter((_, i) => i % 4 === 1);
+  const col3 = testimonials.filter((_, i) => i % 4 === 2);
+  const col4 = testimonials.filter((_, i) => i % 4 === 3);
 
-  useEffect(() => {
-    if (paused || testimonials.length < 2) return;
-    const timer = setInterval(() => go(1), 6000);
-    return () => clearInterval(timer);
-  }, [go, paused, testimonials.length]);
-
-  if (!testimonials.length) return null;
-  const active = testimonials[Math.min(index, testimonials.length - 1)];
-  if (!active) return null;
+  // Fallback if small number of testimonials so every column has items
+  const c1 = col1.length ? col1 : testimonials;
+  const c2 = col2.length ? col2 : testimonials;
+  const c3 = col3.length ? col3 : testimonials;
+  const c4 = col4.length ? col4 : testimonials;
 
   return (
-    <Section id="testimonials">
+    <Section id="testimonials" className="relative overflow-hidden py-24">
       <SectionHeading
         eyebrow="Kata mereka"
-        title="Testimoni dari klien & rekan kerja"
-        description="Penilaian setelah bekerja sama nyata, bukan sekadar formalitas."
+        title="Testimoni dari Klien & Rekan Kerja"
+        description="Penilaian setelah bekerja sama nyata, rekayasa keamanan siber dan web modern."
       />
 
-      <Reveal
-        className="relative mx-auto mt-14 max-w-3xl"
-      >
+      <div className="relative mt-12 flex h-[580px] w-full flex-row items-center justify-center gap-4 overflow-hidden [perspective:400px]">
         <div
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-          onFocusCapture={() => setPaused(true)}
-          onBlurCapture={() => setPaused(false)}
-          className="relative overflow-hidden rounded-3xl border border-border bg-card p-8 shadow-card sm:p-12"
+          className="flex flex-row items-center gap-4"
+          style={{
+            transform:
+              'translateX(-100px) translateY(0px) translateZ(-60px) rotateX(20deg) rotateY(-10deg) rotateZ(20deg)',
+          }}
         >
-          <Quote className="absolute -top-2 right-6 size-16 text-primary/10" />
-
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={active.id}
-              custom={direction}
-              initial={{ opacity: 0, x: direction >= 0 ? 40 : -40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: direction >= 0 ? -40 : 40 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <div className="flex gap-1" aria-label={`Penilaian ${active.rating} dari 5`}>
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    className={cn(
-                      "size-4",
-                      i < active.rating ? "fill-warning text-warning" : "text-muted-foreground/40",
-                    )}
-                  />
-                ))}
-              </div>
-
-              <p className="mt-6 text-lg leading-relaxed text-foreground sm:text-xl">
-                “{active.content}”
-              </p>
-
-              <div className="mt-8 flex items-center gap-4">
-                <img
-                  src={active.photo}
-                  alt={`Foto ${active.name}`}
-                  loading="lazy"
-                  width={56}
-                  height={56}
-                  className="size-14 rounded-full border border-border object-cover"
-                />
-                <div>
-                  <p className="font-display font-semibold">{active.name}</p>
-                  <p className="text-sm text-muted-foreground">{active.role}</p>
-                </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        <div className="mt-8 flex items-center justify-center gap-4">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => go(-1)}
-            aria-label="Testimoni sebelumnya"
-          >
-            <ChevronLeft className="size-4" />
-          </Button>
-
-          <div className="flex items-center gap-2">
-            {testimonials.map((item, i) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setState([i, i > index ? 1 : -1])}
-                aria-label={`Lihat testimoni ${i + 1}`}
-                aria-current={i === index}
-                className={cn(
-                  "h-2 rounded-full transition-all",
-                  i === index ? "w-7 bg-gradient-brand" : "w-2 bg-muted hover:bg-border",
-                )}
+          {/* Column 1 - downwards */}
+          <Marquee vertical pauseOnHover repeat={4} className="[--duration:28s]">
+            {c1.map((item, idx) => (
+              <TestimonialCard
+                key={`c1-${item.id || idx}`}
+                name={item.name}
+                role={item.role}
+                content={item.content}
+                photo={item.photo}
+                rating={item.rating}
               />
             ))}
-          </div>
+          </Marquee>
 
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => go(1)}
-            aria-label="Testimoni berikutnya"
-          >
-            <ChevronRight className="size-4" />
-          </Button>
+          {/* Column 2 - reverse (upwards) */}
+          <Marquee vertical reverse pauseOnHover repeat={4} className="[--duration:34s]">
+            {c2.map((item, idx) => (
+              <TestimonialCard
+                key={`c2-${item.id || idx}`}
+                name={item.name}
+                role={item.role}
+                content={item.content}
+                photo={item.photo}
+                rating={item.rating}
+              />
+            ))}
+          </Marquee>
+
+          {/* Column 3 - downwards */}
+          <Marquee vertical pauseOnHover repeat={4} className="[--duration:30s]">
+            {c3.map((item, idx) => (
+              <TestimonialCard
+                key={`c3-${item.id || idx}`}
+                name={item.name}
+                role={item.role}
+                content={item.content}
+                photo={item.photo}
+                rating={item.rating}
+              />
+            ))}
+          </Marquee>
+
+          {/* Column 4 - reverse (upwards) */}
+          <Marquee vertical reverse pauseOnHover repeat={4} className="[--duration:36s]">
+            {c4.map((item, idx) => (
+              <TestimonialCard
+                key={`c4-${item.id || idx}`}
+                name={item.name}
+                role={item.role}
+                content={item.content}
+                photo={item.photo}
+                rating={item.rating}
+              />
+            ))}
+          </Marquee>
         </div>
-      </Reveal>
+
+        {/* Ambient Top, Bottom, Left & Right Fade Gradients */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-background to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-background to-transparent" />
+      </div>
     </Section>
   );
 }

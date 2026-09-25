@@ -1,8 +1,12 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useRouterState } from "@tanstack/react-router";
+import logoImg from "@/assets/logo.jpg";
 import {
+  Award,
   Briefcase,
+  Database,
   FolderGit2,
+  Globe,
   Inbox,
   LayoutDashboard,
   LogOut,
@@ -36,11 +40,14 @@ export const adminNav = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
   { title: "Profil", url: "/admin/profile", icon: UserCog },
   { title: "Skill", url: "/admin/skills", icon: Wrench },
+  { title: "Brand & Mitra", url: "/admin/brands", icon: Globe },
+  { title: "Sertifikat", url: "/admin/certificates", icon: Award },
   { title: "Proyek", url: "/admin/projects", icon: FolderGit2 },
   { title: "Pengalaman", url: "/admin/experiences", icon: Briefcase },
   { title: "Testimoni", url: "/admin/testimonials", icon: Quote },
   { title: "Pesan", url: "/admin/messages", icon: Inbox },
   { title: "Surat Lamaran AI", url: "/admin/cover-letter", icon: Sparkles },
+  { title: "Database", url: "/admin/database", icon: Database },
 ] as const;
 
 export function AppSidebar() {
@@ -64,11 +71,13 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link to="/">
-                <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-gradient-brand text-primary-foreground">
-                  <Terminal className="size-4" />
-                </span>
+                <img
+                  src={logoImg}
+                  alt="Raditya.tech"
+                  className="size-8 shrink-0 rounded-lg object-cover border border-primary/40 shadow-sm"
+                />
                 <span className="flex flex-col">
-                  <span className="font-display text-sm font-semibold">rizky.dev</span>
+                  <span className="font-display text-sm font-semibold">Raditya.tech</span>
                   <span className="text-xs text-muted-foreground">Admin panel</span>
                 </span>
               </Link>

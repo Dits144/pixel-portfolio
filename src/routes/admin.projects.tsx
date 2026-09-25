@@ -13,6 +13,7 @@ import {
 import { useAction, useResource } from "@/hooks/useCrud";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { DragDropUpload } from "@/components/ui/drag-drop-upload";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -222,14 +223,12 @@ function ProjectsPage() {
           />
         </Field>
 
-        <Field label="Gambar (URL)" htmlFor="project-thumbnail">
-          <Input
-            id="project-thumbnail"
-            value={draft.thumbnail}
-            onChange={(e) => setDraft({ ...draft, thumbnail: e.target.value })}
-            placeholder="/src/assets/project-1.jpg"
-          />
-        </Field>
+        <DragDropUpload
+          label="Gambar Thumbnail Proyek (Drag & Drop)"
+          value={draft.thumbnail}
+          onChange={(val) => setDraft({ ...draft, thumbnail: val })}
+          hint="Tarik gambar thumbnail (JPG, PNG, WEBP) atau gunakan link"
+        />
 
         <Field
           label="Tech stack"

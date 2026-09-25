@@ -2,9 +2,16 @@ import { motion } from "motion/react";
 
 import { Reveal, Section, SectionHeading } from "@/components/landing/section";
 import { Badge } from "@/components/ui/badge";
+import { getSkillIcon } from "@/components/icons/skill-icons";
 import type { Skill, SkillCategory } from "@/types";
 
-const categories: SkillCategory[] = ["Frontend", "Backend", "Database", "DevOps/Tools"];
+const categories: SkillCategory[] = [
+  "Cyber Security",
+  "Frontend",
+  "Backend",
+  "Database",
+  "DevOps/Tools",
+];
 
 export function Skills({ skills }: { skills: Skill[] }) {
   return (
@@ -28,28 +35,36 @@ export function Skills({ skills }: { skills: Skill[] }) {
                 </div>
 
                 <div className="space-y-5">
-                  {items.map((skill) => (
-                    <div key={skill.id}>
-                      <div className="mb-2 flex items-center justify-between text-sm">
-                        <span className="flex items-center gap-2 font-medium">
-                          <span aria-hidden>{skill.icon}</span>
-                          {skill.name}
-                        </span>
-                        <span className="font-mono text-xs text-muted-foreground">
-                          {skill.level} · {skill.percentage}%
-                        </span>
+                  {items.map((skill) => {
+                    const Icon = getSkillIcon(skill.name);
+                    return (
+                      <div key={skill.id}>
+                        <div className="mb-2 flex items-center justify-between text-sm">
+                          <span className="flex items-center gap-2.5 font-medium">
+                            <span
+                              aria-hidden
+                              className="flex size-6 items-center justify-center shrink-0"
+                            >
+                              <Icon size={18} />
+                            </span>
+                            {skill.name}
+                          </span>
+                          <span className="font-mono text-xs text-muted-foreground">
+                            {skill.level} · {skill.percentage}%
+                          </span>
+                        </div>
+                        <div className="h-2 overflow-hidden rounded-full bg-muted">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            whileInView={{ width: `${skill.percentage}%` }}
+                            viewport={{ once: true, amount: 0.6 }}
+                            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                            className="h-full rounded-full bg-gradient-brand"
+                          />
+                        </div>
                       </div>
-                      <div className="h-2 overflow-hidden rounded-full bg-muted">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${skill.percentage}%` }}
-                          viewport={{ once: true, amount: 0.6 }}
-                          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-                          className="h-full rounded-full bg-gradient-brand"
-                        />
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </Reveal>

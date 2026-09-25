@@ -6,8 +6,8 @@ import { RequireAuth } from "@/components/admin/require-auth";
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Panel Admin — rizky.dev" },
-      { name: "description", content: "Kelola konten portofolio rizky.dev." },
+      { title: "Panel Admin — Raditya.tech" },
+      { name: "description", content: "Kelola konten portofolio Raditya.tech." },
       { name: "robots", content: "noindex" },
     ],
   }),

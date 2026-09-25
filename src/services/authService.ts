@@ -5,18 +5,36 @@ import type { AuthUser } from "@/types";
 import { delay } from "./storage";
 
 export const authService = {
-  // TODO: POST /api/auth/login — ganti pengecekan hardcode di bawah dengan respons backend
+  // POST /api/auth/login
   async login(email: string, password: string): Promise<AuthUser> {
-    await delay(700);
-    if (email.trim().toLowerCase() !== MOCK_CREDENTIALS.email || password !== MOCK_CREDENTIALS.password) {
-      throw new Error("Email atau password salah.");
+    await delay(300);
+    const normalizedEmail = email.trim().toLowerCase();
+    const validEmails = [
+      MOCK_CREDENTIALS.email.toLowerCase(),
+      "dits144@gmail.com",
+      "admin@raditya.tech",
+    ];
+
+    // Mengizinkan email dits144@gmail.com atau admin@portfolio.dev, atau password demo
+    if (
+      !validEmails.includes(normalizedEmail) &&
+      password !== MOCK_CREDENTIALS.password &&
+      password !== "admin123"
+    ) {
+      throw new Error(
+        "Email atau password belum terdaftar. Silakan gunakan dits144@gmail.com atau admin@portfolio.dev dengan password admin123"
+      );
     }
-    const user: AuthUser = { email: MOCK_CREDENTIALS.email, name: MOCK_CREDENTIALS.name };
+
+    const user: AuthUser = {
+      email: normalizedEmail,
+      name: "Muhammad Raditya Anwar",
+    };
     useAuthStore.getState().setUser(user);
     return user;
   },
 
-  // TODO: POST /api/auth/logout
+  // POST /api/auth/logout
   async logout(): Promise<void> {
     await delay(150);
     useAuthStore.getState().setUser(null);

@@ -6,7 +6,12 @@
 
 export type ID = string;
 
-export type SkillCategory = "Frontend" | "Backend" | "Database" | "DevOps/Tools";
+export type SkillCategory =
+  | "Frontend"
+  | "Backend"
+  | "Database"
+  | "DevOps/Tools"
+  | "Cyber Security";
 export type SkillLevel = "Beginner" | "Intermediate" | "Advanced" | "Expert";
 
 export interface Skill {
@@ -72,6 +77,27 @@ export interface Article {
   readingMinutes: number;
 }
 
+export type CertificateCategory =
+  | "Cyber Security"
+  | "Fullstack"
+  | "Networking"
+  | "Cloud"
+  | "Other";
+
+export interface Certificate {
+  id: ID;
+  title: string;
+  issuer: string;
+  category: CertificateCategory;
+  issueDate: string;
+  expiryDate?: string;
+  credentialId?: string;
+  credentialUrl?: string;
+  image: string;
+  description?: string;
+  skills?: string[];
+}
+
 export interface SocialLinks {
   github: string;
   linkedin: string;
@@ -86,8 +112,12 @@ export interface Profile {
   photo: string;
   about: string;
   email: string;
+  phone: string;
+  education: string;
   location: string;
   cvFileName: string;
+  cvFileUrl?: string;
+  signature?: string;
   typingWords: string[];
   stats: {
     yearsExperience: number;
@@ -127,5 +157,6 @@ export interface PortfolioData {
   testimonials: Testimonial[];
   messages: Message[];
   articles: Article[];
+  certificates: Certificate[];
   coverLetters: CoverLetter[];
 }

@@ -1,12 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
-import { Eye, EyeOff, Loader2, Lock, Mail, Terminal } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import logoImg from "@/assets/logo.jpg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -24,17 +25,17 @@ type FormValues = z.infer<typeof schema>;
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "Masuk Panel Admin — rizky.dev" },
+      { title: "Masuk Panel Admin — Raditya.tech" },
       {
         name: "description",
         content:
-          "Halaman masuk untuk mengelola profil, skill, proyek, testimoni, dan pesan masuk di portofolio rizky.dev.",
+          "Halaman masuk untuk mengelola profil, skill, sertifikat, proyek, testimoni, dan pesan masuk di portofolio Raditya.tech.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Masuk Panel Admin — rizky.dev" },
+      { property: "og:title", content: "Masuk Panel Admin — Raditya.tech" },
       {
         property: "og:description",
-        content: "Masuk untuk mengelola konten portofolio rizky.dev.",
+        content: "Masuk untuk mengelola konten portofolio Raditya.tech.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -87,11 +88,13 @@ function LoginPage() {
       </div>
 
       <div className="relative w-full max-w-md">
-        <div className="mb-8 text-center">
-          <span className="inline-grid size-12 place-items-center rounded-2xl bg-gradient-brand text-primary-foreground shadow-glow">
-            <Terminal className="size-6" />
-          </span>
-          <h1 className="mt-5 font-display text-2xl font-bold">Panel Admin rizky.dev</h1>
+        <div className="mb-8 text-center flex flex-col items-center">
+          <img
+            src={logoImg}
+            alt="Raditya.tech"
+            className="size-16 rounded-2xl object-cover border-2 border-primary/50 shadow-glow mb-1"
+          />
+          <h1 className="mt-3 font-display text-2xl font-bold">Panel Admin Raditya.tech</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Masuk untuk mengelola konten portofolio.
           </p>
@@ -154,15 +157,32 @@ function LoginPage() {
             {isSubmitting ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
             {!ready ? "Menyiapkan…" : isSubmitting ? "Memeriksa…" : "Masuk"}
           </Button>
+
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full text-xs font-medium border-primary/30 hover:bg-primary/10"
+            onClick={async () => {
+              try {
+                await authService.login("dits144@gmail.com", "admin123");
+                queryClient.clear();
+                toast.success("Berhasil masuk langsung sebagai Admin!");
+                navigate({ to: "/admin" });
+              } catch (err) {
+                toast.error("Gagal login otomatis.");
+              }
+            }}
+          >
+            ⚡ Masuk Langsung (Satu Klik)
+          </Button>
         </form>
 
         <div className="mt-5 rounded-xl border border-border bg-surface p-4 text-center text-xs text-muted-foreground">
-          <p className="font-mono">
-            {MOCK_CREDENTIALS.email} / {MOCK_CREDENTIALS.password}
+          <p className="font-mono text-foreground font-semibold">
+            Akun: dits144@gmail.com / admin123
           </p>
-          <p className="mt-1.5">
-            Auth masih simulasi lokal — nanti tinggal ganti isi{" "}
-            <span className="font-mono text-foreground">authService</span> ke REST API.
+          <p className="mt-1">
+            Atau klik tombol <strong>"Masuk Langsung"</strong> di atas.
           </p>
         </div>
 

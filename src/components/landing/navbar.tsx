@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, Terminal, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import logoImg from "@/assets/logo.jpg";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -9,10 +10,10 @@ import { cn } from "@/lib/utils";
 const links = [
   { href: "#about", label: "Tentang" },
   { href: "#skills", label: "Skill" },
+  { href: "#certificates", label: "Sertifikat" },
   { href: "#projects", label: "Proyek" },
   { href: "#experience", label: "Pengalaman" },
   { href: "#testimonials", label: "Testimoni" },
-  { href: "#blog", label: "Artikel" },
 ];
 
 export function Navbar() {
@@ -34,11 +35,13 @@ export function Navbar() {
       )}
     >
       <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-        <a href="#hero" className="flex items-center gap-2 font-display text-lg font-bold">
-          <span className="grid size-8 place-items-center rounded-lg bg-gradient-brand text-primary-foreground">
-            <Terminal className="size-4" />
-          </span>
-          <span className="text-gradient">rizky.dev</span>
+        <a href="#hero" className="flex items-center gap-2.5 font-display text-lg font-bold">
+          <img
+            src={logoImg}
+            alt="Raditya.tech"
+            className="size-8 rounded-lg object-cover border border-primary/40 shadow-sm"
+          />
+          <span className="text-gradient">Raditya.tech</span>
         </a>
 
         <div className="hidden items-center gap-1 lg:flex">

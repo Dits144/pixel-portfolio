@@ -1,3 +1,4 @@
+import logoImg from "@/assets/logo.jpg";
 import profilePhoto from "@/assets/profile.jpg";
 import project1 from "@/assets/project-1.jpg";
 import project2 from "@/assets/project-2.jpg";
@@ -6,6 +7,7 @@ import project4 from "@/assets/project-4.jpg";
 
 import type {
   Article,
+  Certificate,
   CoverLetter,
   Experience,
   Message,
@@ -17,23 +19,34 @@ import type {
 } from "@/types";
 
 export const mockProfile: Profile = {
-  name: "Rizky Ananda",
-  role: "Fullstack Web Developer",
+  name: "Muhammad Raditya Anwar",
+  role: "Cyber Security & Fullstack Developer",
   tagline:
-    "Membangun produk web yang cepat, rapi, dan siap produksi — dari rancangan antarmuka sampai arsitektur API.",
-  photo: profilePhoto,
+    "Spesialis Teknologi Informasi & Keamanan Siber — berfokus pada pertahanan sistem, arsitektur jaringan aman, dan web engineering modern.",
+  photo: logoImg,
   about:
-    "Saya seorang fullstack developer dengan 5+ tahun pengalaman membangun aplikasi web untuk startup dan agensi digital. Fokus saya pada performa, kode yang mudah dirawat, dan pengalaman pengguna yang detail. Sehari-hari bekerja dengan React, TypeScript, Node.js, dan Laravel, serta terbiasa mengurus deployment dan monitoring sendiri.",
-  email: "halo@rizkyananda.dev",
-  location: "Jakarta, Indonesia",
-  cvFileName: "CV-Rizky-Ananda-2026.pdf",
-  typingWords: ["React", "TypeScript", "Node.js", "Laravel", "PostgreSQL", "Docker"],
-  stats: { yearsExperience: 5, projects: 48, clients: 23 },
+    "Saya memiliki minat dan kemampuan di bidang teknologi informasi dan keamanan siber. Lulusan S1 Teknik Informatika STT Terpadu Nurul Fikri dengan sertifikasi BNSP Junior Network Administrator serta pengalaman magang di bidang Pengolahan Data dan Informasi pada Direktorat Jenderal Pajak. Berpengalaman dalam network administration, vulnerability assessment, dan pengembangan aplikasi web yang aman dan scalable.",
+  email: "dits144@gmail.com",
+  phone: "0858 8284 6665",
+  education: "S1 Teknik Informatika, STT Terpadu Nurul Fikri",
+  location: "Kabupaten Bogor, Jawa Barat",
+  cvFileName: "CV-Muhammad-Raditya-Anwar.pdf",
+  cvFileUrl: "",
+  signature: "Muhammad Raditya Anwar",
+  typingWords: [
+    "Cyber Security",
+    "Network Admin",
+    "Ethical Hacking",
+    "React & TypeScript",
+    "Linux Hardening",
+    "Fullstack Web",
+  ],
+  stats: { yearsExperience: 3, projects: 28, clients: 15 },
   socials: {
-    github: "https://github.com/",
-    linkedin: "https://linkedin.com/",
-    instagram: "https://instagram.com/",
-    whatsapp: "https://wa.me/6281234567890",
+    github: "https://github.com/dits144",
+    linkedin: "https://linkedin.com/in/mradityaanwar",
+    instagram: "https://www.instagram.com/raa__dits/",
+    whatsapp: "https://wa.me/6285882846665",
   },
 };
 
@@ -115,6 +128,54 @@ export const mockSkills: Skill[] = [
   },
   { id: "sk-13", name: "AWS", category: "DevOps/Tools", percentage: 68, level: "Intermediate", icon: "☁️" },
   { id: "sk-14", name: "Figma", category: "DevOps/Tools", percentage: 72, level: "Intermediate", icon: "🎨" },
+  {
+    id: "sk-15",
+    name: "Network Security & Hardening",
+    category: "Cyber Security",
+    percentage: 90,
+    level: "Expert",
+    icon: "🛡️",
+  },
+  {
+    id: "sk-16",
+    name: "Wireshark Packet Analysis",
+    category: "Cyber Security",
+    percentage: 88,
+    level: "Advanced",
+    icon: "🦈",
+  },
+  {
+    id: "sk-17",
+    name: "Nmap & Network Scanning",
+    category: "Cyber Security",
+    percentage: 86,
+    level: "Advanced",
+    icon: "📡",
+  },
+  {
+    id: "sk-18",
+    name: "Burp Suite & Web Penetration",
+    category: "Cyber Security",
+    percentage: 82,
+    level: "Advanced",
+    icon: "🎯",
+  },
+  {
+    id: "sk-19",
+    name: "Linux Hardening & Firewall",
+    category: "Cyber Security",
+    percentage: 85,
+    level: "Advanced",
+    icon: "🔒",
+  },
+  {
+    id: "sk-20",
+    name: "Cryptography & SIEM",
+    category: "Cyber Security",
+    percentage: 78,
+    level: "Intermediate",
+    icon: "🔐",
+  },
 ];
 
 export const mockProjects: Project[] = [
@@ -307,16 +368,79 @@ export const mockArticles: Article[] = [
   },
 ];
 
+export const mockCertificates: Certificate[] = [
+  {
+    id: "cert-1",
+    title: "Junior Network Administrator",
+    issuer: "Badan Nasional Sertifikasi Profesi (BNSP)",
+    category: "Networking",
+    issueDate: "2024",
+    expiryDate: "2027",
+    credentialId: "BNSP-JNA-5421-2024",
+    credentialUrl: "https://bnsp.go.id",
+    image:
+      "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?auto=format&fit=crop&w=1000&q=80",
+    description:
+      "Sertifikasi kompetensi nasional standar BNSP untuk pengelolaan arsitektur jaringan lokal (LAN), routing, IP subnetting, switching, serta basic network security.",
+    skills: ["LAN/WAN Configuration", "IP Subnetting", "Routing & Switching", "Network Security Basics"],
+  },
+  {
+    id: "cert-2",
+    title: "Cybersecurity Essentials & Network Defense",
+    issuer: "Cisco Networking Academy",
+    category: "Cyber Security",
+    issueDate: "2024",
+    expiryDate: "Tanpa Kadaluarsa",
+    credentialId: "CISCO-SEC-992144",
+    credentialUrl: "https://www.credly.com",
+    image:
+      "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1000&q=80",
+    description:
+      "Validasi pemahaman mendalam tentang prinsip confidentiality, integrity, availability (CIA triad), pencegahan cyber attacks, dan konfigurasi firewall.",
+    skills: ["Vulnerability Assessment", "Firewall Configuration", "Threat Mitigation", "Packet Sniffing"],
+  },
+  {
+    id: "cert-3",
+    title: "Menjadi Front-End Web Developer Expert",
+    issuer: "Dicoding Academy Indonesia",
+    category: "Fullstack",
+    issueDate: "2023",
+    expiryDate: "2026",
+    credentialId: "DICODING-FE-88120",
+    credentialUrl: "https://www.dicoding.com/certificates/DICODING-FE-88120",
+    image:
+      "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1000&q=80",
+    description:
+      "Kurikulum industri kurasi Google Developers yang mencakup Progressive Web Apps (PWA), Web Performance, Clean Architecture, dan Test Driven Development (TDD).",
+    skills: ["React", "TypeScript", "PWA & Service Worker", "Automation Testing", "Web Performance"],
+  },
+  {
+    id: "cert-4",
+    title: "Linux System Security & Hardening",
+    issuer: "Open Source Academy",
+    category: "Cyber Security",
+    issueDate: "2023",
+    expiryDate: "Tanpa Kadaluarsa",
+    credentialId: "LNX-SEC-2023-771",
+    credentialUrl: "https://example.com/verify",
+    image:
+      "https://images.unsplash.com/photo-1629654297299-c8506221ca97?auto=format&fit=crop&w=1000&q=80",
+    description:
+      "Konfigurasi kernel hardening, iptables/ufw, SELinux, auditd logging, secure SSH tunneling, serta manajemen hak akses berkas di lingkungan server produksi.",
+    skills: ["Linux Server", "iptables/ufw", "SSH Hardening", "Audit & Log Inspection"],
+  },
+];
+
 export const mockCoverLetters: CoverLetter[] = [
   {
     id: "cl-1",
-    companyName: "Tokopedia",
-    position: "Senior Frontend Engineer",
-    jobDescription: "React, TypeScript, design system, performance optimization.",
+    companyName: "PT Cyber Solusi Nusantara",
+    position: "Junior Security Analyst / Network Engineer",
+    jobDescription:
+      "Network monitoring, packet analysis, vulnerability scanning, Linux system administration, and basic security response.",
     tone: "Formal",
     language: "id",
-    content:
-      "Kepada Yth. Tim Rekrutmen Tokopedia,\n\nSaya menulis surat ini untuk menyatakan ketertarikan saya pada posisi Senior Frontend Engineer...",
+    content: `Surat Lamaran Kerja\nBogor, 24 September 2026\nKepada Yth.\nBapak/Ibu HRD PT Cyber Solusi Nusantara\ndi tempat\n\nPerihal: Lamaran Pekerjaan\n\nDengan hormat,\nBerdasarkan informasi lowongan pekerjaan yang saya peroleh, dengan ini saya mengajukan lamaran kerja untuk posisi Junior Security Analyst / Network Engineer di PT Cyber Solusi Nusantara. Adapun data diri saya sebagai berikut:\n\nNama            : Muhammad Raditya Anwar\nPendidikan      : S1 Teknik Informatika, STT Terpadu Nurul Fikri\nDomisili        : Kabupaten Bogor, Jawa Barat\nNo. telepon     : 0858 8284 6665\nEmail           : dits144@gmail.com\n\nSaya memiliki minat dan kemampuan yang kuat di bidang teknologi informasi dan keamanan siber. Saya memegang sertifikasi BNSP Junior Network Administrator serta memiliki pengalaman magang di bidang Pengolahan Data dan Informasi pada Direktorat Jenderal Pajak. Berbekal pemahaman network administration, vulnerability assessment, dan konfigurasi server Linux, saya siap belajar cepat, bekerja dengan teliti, dan memberikan kontribusi nyata sesuai kebutuhan tim PT Cyber Solusi Nusantara.\n\nSebagai bahan pertimbangan, bersama surat ini saya lampirkan CV dan dokumen pendukung lainnya. Besar harapan saya untuk mendapat kesempatan mengikuti tahapan seleksi dan wawancara.\n\nDemikian surat lamaran ini saya sampaikan. Atas perhatian Bapak/Ibu, saya mengucapkan terima kasih.\n\nHormat saya,\n\nMuhammad Raditya Anwar`,
     createdAt: "2026-09-01T08:00:00.000Z",
   },
 ];
@@ -329,6 +453,7 @@ export const initialPortfolioData: PortfolioData = {
   testimonials: mockTestimonials,
   messages: mockMessages,
   articles: mockArticles,
+  certificates: mockCertificates,
   coverLetters: mockCoverLetters,
 };
 
@@ -336,5 +461,5 @@ export const initialPortfolioData: PortfolioData = {
 export const MOCK_CREDENTIALS = {
   email: "admin@portfolio.dev",
   password: "admin123",
-  name: "Rizky Ananda",
+  name: "Muhammad Raditya Anwar",
 };

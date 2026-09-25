@@ -12,6 +12,7 @@ import {
 } from "@/components/admin/crud";
 import { useAction, useResource } from "@/hooks/useCrud";
 import { Button } from "@/components/ui/button";
+import { DragDropUpload } from "@/components/ui/drag-drop-upload";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -186,13 +187,12 @@ function TestimonialsPage() {
           </Field>
         </div>
 
-        <Field label="Foto (URL)" htmlFor="ts-photo">
-          <Input
-            id="ts-photo"
-            value={draft.photo}
-            onChange={(e) => setDraft({ ...draft, photo: e.target.value })}
-          />
-        </Field>
+        <DragDropUpload
+          label="Foto Testimoni (Drag & Drop)"
+          value={draft.photo}
+          onChange={(val) => setDraft({ ...draft, photo: val })}
+          hint="Tarik foto avatar (JPG, PNG, WEBP) atau gunakan URL"
+        />
 
         <Field label="Isi testimoni" htmlFor="ts-content">
           <Textarea

@@ -13,7 +13,10 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
+import { Route as AdminCertificatesRouteImport } from './routes/admin.certificates'
 import { Route as AdminCoverLetterRouteImport } from './routes/admin.cover-letter'
+import { Route as AdminDatabaseRouteImport } from './routes/admin.database'
 import { Route as AdminExperiencesRouteImport } from './routes/admin.experiences'
 import { Route as AdminMessagesRouteImport } from './routes/admin.messages'
 import { Route as AdminProfileRouteImport } from './routes/admin.profile'
@@ -41,9 +44,24 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminBrandsRoute = AdminBrandsRouteImport.update({
+  id: '/brands',
+  path: '/brands',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCertificatesRoute = AdminCertificatesRouteImport.update({
+  id: '/certificates',
+  path: '/certificates',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCoverLetterRoute = AdminCoverLetterRouteImport.update({
   id: '/cover-letter',
   path: '/cover-letter',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDatabaseRoute = AdminDatabaseRouteImport.update({
+  id: '/database',
+  path: '/database',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminExperiencesRoute = AdminExperiencesRouteImport.update({
@@ -81,7 +99,10 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
+  '/admin/brands': typeof AdminBrandsRoute
+  '/admin/certificates': typeof AdminCertificatesRoute
   '/admin/cover-letter': typeof AdminCoverLetterRoute
+  '/admin/database': typeof AdminDatabaseRoute
   '/admin/experiences': typeof AdminExperiencesRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/profile': typeof AdminProfileRoute
@@ -93,7 +114,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/admin/brands': typeof AdminBrandsRoute
+  '/admin/certificates': typeof AdminCertificatesRoute
   '/admin/cover-letter': typeof AdminCoverLetterRoute
+  '/admin/database': typeof AdminDatabaseRoute
   '/admin/experiences': typeof AdminExperiencesRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/profile': typeof AdminProfileRoute
@@ -107,7 +131,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
+  '/admin/brands': typeof AdminBrandsRoute
+  '/admin/certificates': typeof AdminCertificatesRoute
   '/admin/cover-letter': typeof AdminCoverLetterRoute
+  '/admin/database': typeof AdminDatabaseRoute
   '/admin/experiences': typeof AdminExperiencesRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/profile': typeof AdminProfileRoute
@@ -122,7 +149,10 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/login'
+    | '/admin/brands'
+    | '/admin/certificates'
     | '/admin/cover-letter'
+    | '/admin/database'
     | '/admin/experiences'
     | '/admin/messages'
     | '/admin/profile'
@@ -134,7 +164,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/admin/brands'
+    | '/admin/certificates'
     | '/admin/cover-letter'
+    | '/admin/database'
     | '/admin/experiences'
     | '/admin/messages'
     | '/admin/profile'
@@ -147,7 +180,10 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/login'
+    | '/admin/brands'
+    | '/admin/certificates'
     | '/admin/cover-letter'
+    | '/admin/database'
     | '/admin/experiences'
     | '/admin/messages'
     | '/admin/profile'
@@ -193,11 +229,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/brands': {
+      id: '/admin/brands'
+      path: '/brands'
+      fullPath: '/admin/brands'
+      preLoaderRoute: typeof AdminBrandsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/certificates': {
+      id: '/admin/certificates'
+      path: '/certificates'
+      fullPath: '/admin/certificates'
+      preLoaderRoute: typeof AdminCertificatesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/cover-letter': {
       id: '/admin/cover-letter'
       path: '/cover-letter'
       fullPath: '/admin/cover-letter'
       preLoaderRoute: typeof AdminCoverLetterRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/database': {
+      id: '/admin/database'
+      path: '/database'
+      fullPath: '/admin/database'
+      preLoaderRoute: typeof AdminDatabaseRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/experiences': {
@@ -246,7 +303,10 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminBrandsRoute: typeof AdminBrandsRoute
+  AdminCertificatesRoute: typeof AdminCertificatesRoute
   AdminCoverLetterRoute: typeof AdminCoverLetterRoute
+  AdminDatabaseRoute: typeof AdminDatabaseRoute
   AdminExperiencesRoute: typeof AdminExperiencesRoute
   AdminMessagesRoute: typeof AdminMessagesRoute
   AdminProfileRoute: typeof AdminProfileRoute
@@ -257,7 +317,10 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminBrandsRoute: AdminBrandsRoute,
+  AdminCertificatesRoute: AdminCertificatesRoute,
   AdminCoverLetterRoute: AdminCoverLetterRoute,
+  AdminDatabaseRoute: AdminDatabaseRoute,
   AdminExperiencesRoute: AdminExperiencesRoute,
   AdminMessagesRoute: AdminMessagesRoute,
   AdminProfileRoute: AdminProfileRoute,

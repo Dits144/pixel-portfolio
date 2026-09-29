@@ -86,9 +86,9 @@ function DashboardPage() {
         />
         <StatCard
           icon={<Wrench className="size-5" />}
-          label="Skill"
+          label="Tech Stack"
           value={skills.data?.length ?? 0}
-          hint="termasuk Cyber Security"
+          hint="progress & kemahiran"
           to="/admin/skills"
         />
         <StatCard

@@ -39,7 +39,7 @@ import { cn } from "@/lib/utils";
 export const adminNav = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
   { title: "Profil", url: "/admin/profile", icon: UserCog },
-  { title: "Skill", url: "/admin/skills", icon: Wrench },
+  { title: "Tech Stack & Skill", url: "/admin/skills", icon: Wrench },
   { title: "Brand & Mitra", url: "/admin/brands", icon: Globe },
   { title: "Sertifikat", url: "/admin/certificates", icon: Award },
   { title: "Proyek", url: "/admin/projects", icon: FolderGit2 },

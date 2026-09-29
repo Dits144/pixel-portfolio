@@ -111,8 +111,8 @@ function SkillsPage() {
   return (
     <div>
       <PageHeader
-        title="Skill"
-        description="Kategori dan persentase ini yang digambar sebagai batang kemahiran di halaman depan."
+        title="Tech Stack & Skill"
+        description="Kelola kategori, nama teknologi, level, dan persentase progress kemahiran yang tampil di section Tech Stack halaman depan."
         action={
           <Button onClick={startCreate} className="shadow-glow">
             <Plus className="mr-2 size-4" /> Tambah skill
@@ -131,10 +131,10 @@ function SkillsPage() {
           <table className="w-full text-sm">
             <thead className="border-b border-border text-left text-xs text-muted-foreground uppercase">
               <tr>
-                <th className="px-4 py-3 font-medium">Skill</th>
+                <th className="px-4 py-3 font-medium">Skill / Tech</th>
                 <th className="px-4 py-3 font-medium">Kategori</th>
                 <th className="px-4 py-3 font-medium">Level</th>
-                <th className="w-56 px-4 py-3 font-medium">Kemahiran</th>
+                <th className="w-56 px-4 py-3 font-medium">Progress Kemahiran</th>
                 <th className="px-4 py-3 text-right font-medium">Aksi</th>
               </tr>
             </thead>
@@ -153,11 +153,11 @@ function SkillsPage() {
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
                         <div
-                          className="h-full rounded-full bg-gradient-brand"
+                          className="h-full rounded-full bg-gradient-brand transition-all duration-300"
                           style={{ width: `${skill.percentage}%` }}
                         />
                       </div>
-                      <span className="font-mono text-xs text-muted-foreground">
+                      <span className="font-mono text-xs text-muted-foreground w-10 text-right">
                         {skill.percentage}%
                       </span>
                     </div>
@@ -277,14 +277,31 @@ function SkillsPage() {
           </Field>
         </div>
 
-        <Field label={`Kemahiran — ${draft.percentage}%`}>
-          <Slider
-            value={[draft.percentage]}
-            min={0}
-            max={100}
-            step={1}
-            onValueChange={([value]) => setDraft({ ...draft, percentage: value ?? 0 })}
-          />
+        <Field label={`Progress Kemahiran (${draft.percentage}%)`}>
+          <div className="flex items-center gap-4">
+            <div className="flex-1">
+              <Slider
+                value={[draft.percentage]}
+                min={0}
+                max={100}
+                step={1}
+                onValueChange={([value]) => setDraft({ ...draft, percentage: value ?? 0 })}
+              />
+            </div>
+            <div className="w-20">
+              <Input
+                type="number"
+                min={0}
+                max={100}
+                value={draft.percentage}
+                onChange={(e) => {
+                  const val = Math.max(0, Math.min(100, Number(e.target.value) || 0));
+                  setDraft({ ...draft, percentage: val });
+                }}
+                className="text-center font-mono text-sm"
+              />
+            </div>
+          </div>
         </Field>
       </FormDialog>
 

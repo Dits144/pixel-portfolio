@@ -246,9 +246,7 @@ export default function GlyphPortal({
       target =
         candidates.find((candidate) => candidate.index === requested) ??
         [...candidates].sort(
-          (a, b) =>
-            b.radius - a.radius ||
-            Math.abs(a.x - center.x) - Math.abs(b.x - center.x),
+          (a, b) => Math.abs(a.x - center.x) - Math.abs(b.x - center.x),
         )[0] ??
         null;
       return true;
@@ -417,6 +415,30 @@ export default function GlyphPortal({
       }
     };
 
+    const onPointerMove = (event: PointerEvent) => {
+      if (disposed || !candidates.length || !pin) return;
+      if (position() >= 0.05) return;
+      const pinRect = pin.getBoundingClientRect();
+      const pointerX = event.clientX - pinRect.left;
+
+      let closest: Ink | null = null;
+      let minDistance = Infinity;
+
+      for (const candidate of candidates) {
+        const candidateCenterX = W / 2 + (candidate.x - center.x) * startScale;
+        const dist = Math.abs(pointerX - candidateCenterX);
+        if (dist < minDistance) {
+          minDistance = dist;
+          closest = candidate;
+        }
+      }
+
+      if (closest && closest !== target) {
+        select(closest);
+      }
+    };
+
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
     choices.addEventListener("pointerover", choose);
     choices.addEventListener("click", choose);
     choices.addEventListener("focusin", choose);
@@ -451,6 +473,7 @@ export default function GlyphPortal({
       cancelAnimationFrame(raf);
       observer.disconnect();
       visibility.disconnect();
+      window.removeEventListener("pointermove", onPointerMove);
       (root ?? window).removeEventListener("scroll", scroll);
       window.removeEventListener("resize", resize);
       window.visualViewport?.removeEventListener("resize", resize);

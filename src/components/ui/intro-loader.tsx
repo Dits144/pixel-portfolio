@@ -151,14 +151,11 @@ export function IntroLoader({ profile, onFinished }: IntroLoaderProps) {
               backdrop-filter:blur(12px);
             }
             [data-loader-portal] [data-gp-letter]{
-              border-radius:8px;
-              transition:background .16s,outline-color .16s;
-            }
-            [data-loader-portal] [data-gp-letter]:hover,
-            [data-loader-portal] [data-gp-letter][aria-checked=true]{
-              outline:1px solid color-mix(in oklab,var(--color-primary) 72%,transparent);
-              outline-offset:6px;
-              background:color-mix(in oklab,var(--color-primary) 12%,transparent);
+              display:none!important;
+              pointer-events:none!important;
+              outline:none!important;
+              background:transparent!important;
+              border:none!important;
             }
             [data-loader-front]{
               position:absolute;

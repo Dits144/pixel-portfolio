@@ -51,8 +51,8 @@ export function ExperienceTimeline({ experiences }: { experiences: Experience[] 
       mutedTextColor="var(--color-muted-foreground, #a1a1aa)"
       activeColor="oklch(0.68 0.22 250)"
       backgroundColor="transparent"
-      imageUrl="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80"
-      imageAlt="Muhammad Raditya Anwar - Cyber Security & Fullstack Developer"
+      imageUrl="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80"
+      imageAlt="Muhammad Raditya Anwar - Cyber Security Specialist & Network Administrator"
       duration={1.2}
       topItems={topItems.length > 0 ? topItems : undefined}
       bottomItems={bottomItems.length > 0 ? bottomItems : undefined}

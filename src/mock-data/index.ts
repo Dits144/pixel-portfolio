@@ -459,7 +459,7 @@ export const initialPortfolioData: PortfolioData = {
 
 /** Kredensial simulasi untuk mock auth. TODO: ganti dengan POST /api/auth/login */
 export const MOCK_CREDENTIALS = {
-  email: "admin@portfolio.dev",
-  password: "admin123",
+  email: "dits144@gmail.com",
+  password: "Ditsanalah144",
   name: "Muhammad Raditya Anwar",
 };

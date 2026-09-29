@@ -169,6 +169,9 @@ export const usePortfolioStore = create<PortfolioState>()(
       storage: createJSONStorage(() => safeStorage),
       onRehydrateStorage: () => (state) => {
         if (state) {
+          if (!state.skills || state.skills.length === 0) {
+            state.skills = initialPortfolioData.skills;
+          }
           if (!state.certificates || state.certificates.length === 0) {
             state.certificates = initialPortfolioData.certificates;
           }

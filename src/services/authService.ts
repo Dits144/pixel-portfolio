@@ -9,21 +9,8 @@ export const authService = {
   async login(email: string, password: string): Promise<AuthUser> {
     await delay(300);
     const normalizedEmail = email.trim().toLowerCase();
-    const validEmails = [
-      MOCK_CREDENTIALS.email.toLowerCase(),
-      "dits144@gmail.com",
-      "admin@raditya.tech",
-    ];
-
-    // Mengizinkan email dits144@gmail.com atau admin@portfolio.dev, atau password demo
-    if (
-      !validEmails.includes(normalizedEmail) &&
-      password !== MOCK_CREDENTIALS.password &&
-      password !== "admin123"
-    ) {
-      throw new Error(
-        "Email atau password belum terdaftar. Silakan gunakan dits144@gmail.com atau admin@portfolio.dev dengan password admin123"
-      );
+    if (normalizedEmail !== "dits144@gmail.com" || password !== "Ditsanalah144") {
+      throw new Error("Email atau kata sandi tidak valid.");
     }
 
     const user: AuthUser = {

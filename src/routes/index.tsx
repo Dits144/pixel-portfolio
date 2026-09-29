@@ -1,21 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 
 import { About } from "@/components/landing/about";
 import { Certificates } from "@/components/landing/certificates";
-import { Contact } from "@/components/landing/contact";
+import { ContactWithGlobe } from "@/components/ui/contact-with-globe";
 import { ExperienceTimeline } from "@/components/landing/experience";
-import { Footer } from "@/components/landing/footer";
+import { FooterSection } from "@/components/ui/footer-section";
 import { Hero } from "@/components/landing/hero";
-import { Navbar } from "@/components/landing/navbar";
+import { BottomDockNavbar } from "@/components/landing/bottom-dock-navbar";
 import { Projects } from "@/components/landing/projects";
 import { Skills } from "@/components/landing/skills";
 import { Testimonials } from "@/components/landing/testimonials";
-import { usePortfolioContent } from "@/hooks/usePortfolioContent";
-
-import { useState, useEffect } from "react";
-import { IntroLoader } from "@/components/ui/intro-loader";
 import { BrandMarquee } from "@/components/landing/brand-marquee";
+import { IntroLoader } from "@/components/ui/intro-loader";
 import WavingPortfolioLanding from "@/components/ui/waving-portfolio-landing";
+import { usePortfolioContent } from "@/hooks/usePortfolioContent";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -57,9 +56,12 @@ function LandingPage() {
   if (!data) return null;
 
   return (
-    <div className="min-h-screen bg-background relative">
-      {showIntro && <IntroLoader onFinished={() => setShowIntro(false)} />}
-      <Navbar />
+    <div className="min-h-screen bg-background relative pb-24">
+      {showIntro && <IntroLoader profile={data.profile} onFinished={() => setShowIntro(false)} />}
+      
+      {/* Sticky Bottom Dock Menu (menggantikan navbar atas) */}
+      <BottomDockNavbar />
+
       <main>
         {/* Animated Creative Opening Poster */}
         <section className="relative w-full border-b border-border/40 overflow-hidden">
@@ -80,6 +82,7 @@ function LandingPage() {
             intro={!showIntro}
           />
         </section>
+
         <Hero profile={data.profile} />
         <About profile={data.profile} />
         <Skills skills={data.skills} />
@@ -87,10 +90,13 @@ function LandingPage() {
         <Projects projects={data.projects} />
         <ExperienceTimeline experiences={data.experiences} />
         <Testimonials testimonials={data.testimonials} />
-        <Contact profile={data.profile} />
+        <ContactWithGlobe profile={data.profile} />
       </main>
+
       <BrandMarquee />
-      <Footer profile={data.profile} />
+      <FooterSection profile={data.profile} />
     </div>
   );
 }
+
+export default LandingPage;

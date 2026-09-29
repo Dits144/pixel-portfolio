@@ -1,6 +1,8 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { ExternalLink } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { ExternalLink, LogOut } from "lucide-react";
 import type { ReactNode } from "react";
+import { toast } from "sonner";
 
 import { AppSidebar, adminNav } from "@/components/admin/app-sidebar";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -16,14 +18,28 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { authService } from "@/services/authService";
 import { useAuthStore } from "@/store/authStore";
 
 export function AdminShell({ children }: { children: ReactNode }) {
   const user = useAuthStore((state) => state.user);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const pathname = useRouterState({ select: (router) => router.location.pathname });
   const current = adminNav.find((item) =>
     item.url === "/admin" ? pathname === item.url : pathname.startsWith(item.url),
   );
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      queryClient.clear();
+      toast.success("Berhasil keluar dari panel admin.");
+      navigate({ to: "/login" });
+    } catch {
+      toast.error("Gagal keluar.");
+    }
+  };
 
   const initials = (user?.name ?? "A")
     .split(" ")
@@ -44,8 +60,12 @@ export function AdminShell({ children }: { children: ReactNode }) {
             </h1>
           </div>
 
-          <Badge variant="outline" className="hidden font-mono text-[11px] sm:inline-flex">
-            mode demo
+          <Badge
+            variant="outline"
+            className="hidden font-mono text-[11px] sm:inline-flex border-emerald-500/40 text-emerald-400 bg-emerald-500/10 gap-1.5 py-0.5 px-2.5 items-center"
+          >
+            <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            Live Production
           </Badge>
 
           <ThemeToggle />
@@ -70,6 +90,13 @@ export function AdminShell({ children }: { children: ReactNode }) {
                 <Link to="/">
                   <ExternalLink className="mr-2 size-4" /> Buka situs publik
                 </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="text-destructive focus:text-destructive cursor-pointer"
+                onClick={handleLogout}
+              >
+                <LogOut className="mr-2 size-4" /> Keluar
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { authService } from "@/services/authService";
 import { useAuthStore } from "@/store/authStore";
-import { MOCK_CREDENTIALS } from "@/mock-data";
 
 const schema = z.object({
   email: z.string().email("Format email belum benar"),
@@ -115,7 +114,7 @@ function LoginPage() {
                 id="email"
                 type="email"
                 autoComplete="username"
-                placeholder="admin@portfolio.dev"
+                placeholder="nama@email.com"
                 className="pl-9"
                 {...register("email")}
               />
@@ -157,34 +156,7 @@ function LoginPage() {
             {isSubmitting ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
             {!ready ? "Menyiapkan…" : isSubmitting ? "Memeriksa…" : "Masuk"}
           </Button>
-
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full text-xs font-medium border-primary/30 hover:bg-primary/10"
-            onClick={async () => {
-              try {
-                await authService.login("dits144@gmail.com", "admin123");
-                queryClient.clear();
-                toast.success("Berhasil masuk langsung sebagai Admin!");
-                navigate({ to: "/admin" });
-              } catch (err) {
-                toast.error("Gagal login otomatis.");
-              }
-            }}
-          >
-            ⚡ Masuk Langsung (Satu Klik)
-          </Button>
         </form>
-
-        <div className="mt-5 rounded-xl border border-border bg-surface p-4 text-center text-xs text-muted-foreground">
-          <p className="font-mono text-foreground font-semibold">
-            Akun: dits144@gmail.com / admin123
-          </p>
-          <p className="mt-1">
-            Atau klik tombol <strong>"Masuk Langsung"</strong> di atas.
-          </p>
-        </div>
 
         <p className="mt-6 text-center">
           <a href="/" className="text-sm text-muted-foreground underline-offset-4 hover:underline">

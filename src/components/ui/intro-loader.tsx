@@ -1,189 +1,363 @@
-import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import hdLogo from "@/assets/hd-logo.jpg";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+
+import GlyphPortal from "@/components/ui/glyph-portal";
+import type { Profile } from "@/types";
 
 interface IntroLoaderProps {
+  profile?: Profile;
   onFinished: () => void;
 }
 
-export function IntroLoader({ onFinished }: IntroLoaderProps) {
-  const [phase, setPhase] = useState<"initial" | "logo" | "name" | "sub" | "line" | "exit">("initial");
+export function IntroLoader({ profile, onFinished }: IntroLoaderProps) {
+  const [phase, setPhase] = useState<"loading" | "portal">("loading");
+  const [exiting, setExiting] = useState(false);
+  const finishedRef = useRef(false);
+
+  const finish = useCallback(() => {
+    if (finishedRef.current) return;
+    finishedRef.current = true;
+    setExiting(true);
+    window.setTimeout(onFinished, 720);
+  }, [onFinished]);
 
   useEffect(() => {
-    // Check prefers-reduced-motion
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       onFinished();
       return;
     }
 
-    // Calibrated pacing (~3.6s total sequence for a premium, non-rushed cinematic feel)
-    const t0 = setTimeout(() => setPhase("logo"), 200);
-    const t1 = setTimeout(() => setPhase("name"), 800);
-    const t2 = setTimeout(() => setPhase("sub"), 1400);
-    const t3 = setTimeout(() => setPhase("line"), 1900);
-    const t4 = setTimeout(() => setPhase("exit"), 3200);
-    const tEnd = setTimeout(() => {
-      onFinished();
-    }, 4100);
-
-    return () => {
-      clearTimeout(t0);
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-      clearTimeout(t4);
-      clearTimeout(tEnd);
-    };
+    const timer = window.setTimeout(() => setPhase("portal"), 1650);
+    return () => window.clearTimeout(timer);
   }, [onFinished]);
 
   return (
     <AnimatePresence>
-      {phase !== "exit" && (
+      {!exiting && (
         <motion.div
           key="intro-screen"
           initial={{ opacity: 1 }}
           exit={{
-            y: "-100%",
-            transition: {
-              duration: 0.95,
-              ease: [0.22, 1, 0.36, 1],
-            },
+            opacity: 0,
+            scale: 1.015,
+            filter: "blur(14px)",
+            transition: { duration: 0.72, ease: [0.22, 1, 0.36, 1] },
           }}
-          className="fixed inset-0 z-[100] flex flex-col justify-between bg-background text-foreground px-6 py-8 sm:px-12 sm:py-10 select-none overflow-hidden"
+          className="fixed inset-0 z-[100] bg-background text-foreground select-none"
         >
-          {/* Subtle ambient background glow & grid */}
-          <div className="absolute inset-0 grid-backdrop opacity-25 pointer-events-none" />
-          <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-96 rounded-full bg-primary/10 blur-[130px]" />
-
-          {/* Top Metadata Header */}
-          <div className="relative flex items-center justify-between w-full z-10">
-            <motion.div
-              initial={{ opacity: 0, y: -8, filter: "blur(6px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="flex items-center gap-3"
-            >
-              <div className="size-2 rounded-full bg-primary animate-pulse shadow-glow" />
-              <span className="font-mono text-xs tracking-widest text-muted-foreground uppercase">
-                Portfolio / 2026
-              </span>
-            </motion.div>
-
-            <motion.span
-              initial={{ opacity: 0, filter: "blur(6px)" }}
-              animate={{ opacity: 1, filter: "blur(0px)" }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className="font-mono text-xs tracking-wider text-muted-foreground/70 hidden sm:inline-block"
-            >
-              Bogor — ID
-            </motion.span>
-          </div>
-
-          {/* Centerpiece: Hero Avatar Logo & Editorial Typography */}
-          <div className="relative my-auto flex flex-col items-center justify-center text-center z-10 w-full max-w-4xl mx-auto">
-            {/* User Custom Avatar / Logo (HD Cybersec Developer) */}
-            <motion.div
-              initial={{ scale: 0.75, opacity: 0, filter: "blur(12px)" }}
-              animate={
-                phase !== "initial"
-                  ? { scale: 1, opacity: 1, filter: "blur(0px)" }
-                  : { scale: 0.75, opacity: 0, filter: "blur(12px)" }
-              }
-              transition={{
-                duration: 0.9,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="relative mb-6 sm:mb-8 group"
-            >
-              <div className="relative size-24 sm:size-28 md:size-32 rounded-3xl overflow-hidden border border-border/80 shadow-2xl bg-card/90 backdrop-blur-md p-1 glow-ring">
-                <img
-                  src={hdLogo}
-                  alt="Muhammad Raditya Anwar - HD Cybersec Developer"
-                  className="w-full h-full object-cover rounded-2xl"
-                />
-              </div>
-            </motion.div>
-
-            {/* Main Editorial Name Reveal with Mask */}
-            <div className="overflow-hidden py-1">
+          <style>{`
+            [data-loader-boot]{
+              position:absolute;
+              inset:0;
+              display:grid;
+              place-items:center;
+              overflow:hidden;
+              background:var(--color-background);
+            }
+            [data-loader-boot]::before{
+              content:"";
+              position:absolute;
+              inset:-20%;
+              background:
+                radial-gradient(circle at 24% 20%, color-mix(in oklab,var(--color-primary-glow) 34%,transparent), transparent 28%),
+                radial-gradient(circle at 78% 72%, color-mix(in oklab,var(--color-accent) 28%,transparent), transparent 30%),
+                var(--color-background);
+              opacity:.9;
+            }
+            [data-loader-boot-card]{
+              position:relative;
+              display:flex;
+              width:min(88vw,460px);
+              flex-direction:column;
+              gap:22px;
+              align-items:center;
+              text-align:center;
+            }
+            [data-loader-boot-mark]{
+              display:grid;
+              width:82px;
+              height:82px;
+              place-items:center;
+              border:1px solid color-mix(in oklab,var(--color-primary) 44%,var(--color-border));
+              border-radius:22px;
+              background:color-mix(in oklab,var(--color-background) 74%,var(--color-primary));
+              color:var(--color-primary);
+              font-family:var(--font-mono);
+              font-size:26px;
+              font-weight:800;
+              box-shadow:var(--shadow-glow);
+            }
+            [data-loader-boot-card] h2{
+              margin:0;
+              color:var(--color-foreground);
+              font-size:clamp(1.35rem,1rem + 1.8vw,2.2rem);
+              font-weight:800;
+              letter-spacing:0;
+            }
+            [data-loader-boot-card] p{
+              margin:0;
+              color:var(--color-muted-foreground);
+              font-size:13px;
+              line-height:1.6;
+            }
+            [data-loader-progress]{
+              position:relative;
+              width:min(260px,70vw);
+              height:2px;
+              overflow:hidden;
+              border-radius:999px;
+              background:color-mix(in oklab,var(--color-border) 75%,transparent);
+            }
+            [data-loader-progress]::before{
+              content:"";
+              position:absolute;
+              inset:0;
+              background:linear-gradient(90deg,transparent,var(--color-primary),var(--color-primary-glow));
+              transform-origin:left;
+              animation:loader-progress 1.45s cubic-bezier(.22,1,.36,1) both;
+            }
+            @keyframes loader-progress{
+              from{transform:translateX(-102%);}
+              to{transform:translateX(0);}
+            }
+            [data-loader-scroll]{
+              height:100svh;
+              overflow-y:auto;
+              overscroll-behavior:contain;
+              scrollbar-width:none;
+              background:var(--color-background);
+            }
+            [data-loader-scroll]::-webkit-scrollbar{display:none;}
+            [data-loader-portal] [data-gp-caption]{
+              inset:calc(var(--gp-word-bottom,50%) + 82px) 24px auto;
+              justify-content:center;
+            }
+            [data-loader-portal] [data-gp-hint],
+            [data-loader-portal] [data-gp-enter]{
+              display:none;
+            }
+            [data-loader-portal] [data-gp-touch-picker]{
+              top:auto;
+              bottom:13%;
+              left:50%;
+              z-index:3;
+            }
+            [data-loader-portal] [data-gp-select]{
+              min-width:128px;
+              border-color:color-mix(in oklab,var(--color-primary) 40%,var(--color-border));
+              border-radius:999px;
+              background:color-mix(in oklab,var(--color-background) 84%,transparent);
+              color:var(--color-foreground);
+              backdrop-filter:blur(12px);
+            }
+            [data-loader-portal] [data-gp-letter]{
+              border-radius:8px;
+              transition:background .16s,outline-color .16s;
+            }
+            [data-loader-portal] [data-gp-letter]:hover,
+            [data-loader-portal] [data-gp-letter][aria-checked=true]{
+              outline:1px solid color-mix(in oklab,var(--color-primary) 72%,transparent);
+              outline-offset:6px;
+              background:color-mix(in oklab,var(--color-primary) 12%,transparent);
+            }
+            [data-loader-front]{
+              position:absolute;
+              inset:0;
+              pointer-events:none;
+            }
+            [data-loader-kicker]{
+              position:absolute;
+              inset:auto 24px calc(100% - var(--gp-word-top,35%) + 32px);
+              margin:0;
+              color:var(--color-primary);
+              text-align:center;
+              font-family:var(--font-mono);
+              font-size:12px;
+              font-weight:600;
+              letter-spacing:.16em;
+              line-height:1.5;
+              text-transform:uppercase;
+            }
+            [data-loader-copy]{
+              position:absolute;
+              inset:calc(var(--gp-word-bottom,50%) + 30px) 24px auto;
+              margin:0;
+              color:var(--color-muted-foreground);
+              text-align:center;
+              font-size:clamp(15px,2.1vw,20px);
+              font-weight:500;
+              line-height:1.5;
+            }
+            [data-loader-copy] span{
+              color:var(--color-primary);
+              font-family:var(--font-mono);
+            }
+            [data-loader-pickhint]{
+              display:block;
+              margin-top:6px;
+              color:color-mix(in oklab,var(--color-muted-foreground) 80%,transparent);
+              font-family:var(--font-mono);
+              font-size:11px;
+              letter-spacing:.08em;
+              text-transform:uppercase;
+            }
+            [data-loader-scrollhint]{
+              position:absolute;
+              inset:auto 24px 7%;
+              color:var(--color-muted-foreground);
+              text-align:center;
+              font-size:11px;
+            }
+            [data-loader-skip]{
+              position:fixed;
+              right:clamp(18px,4vw,44px);
+              bottom:clamp(18px,4vw,36px);
+              z-index:2;
+              border:1px solid color-mix(in oklab,var(--color-primary) 42%,var(--color-border));
+              border-radius:999px;
+              background:color-mix(in oklab,var(--color-background) 82%,transparent);
+              color:var(--color-foreground);
+              padding:10px 14px;
+              font-size:12px;
+              font-weight:600;
+              box-shadow:var(--shadow-card);
+              backdrop-filter:blur(12px);
+            }
+            [data-loader-content]{
+              display:flex;
+              width:min(100%,70rem);
+              margin:auto;
+              flex-direction:column;
+              align-items:center;
+              gap:clamp(1.5rem,5svh,2.5rem);
+              text-align:center;
+            }
+            [data-loader-content] h1{
+              max-width:56rem;
+              margin:0;
+              color:inherit;
+              font-size:clamp(2.2rem,1.3rem + 5vw,5.2rem);
+              font-weight:800;
+              line-height:.98;
+              letter-spacing:0;
+              text-wrap:balance;
+            }
+            [data-loader-content] p{
+              max-width:38rem;
+              margin:0;
+              color:color-mix(in oklab,var(--color-foreground) 76%,transparent);
+              font-size:clamp(1rem,.9rem + .45vw,1.18rem);
+              line-height:1.65;
+            }
+            [data-loader-enter]{
+              border:1px solid color-mix(in oklab,var(--color-primary) 48%,var(--color-border));
+              border-radius:999px;
+              background:var(--color-primary);
+              color:var(--color-primary-foreground);
+              padding:12px 18px;
+              font-weight:700;
+              box-shadow:var(--shadow-glow);
+            }
+            @container(max-height:479px){
+              [data-loader-copy]{top:calc(var(--gp-word-bottom,50%) + 14px);}
+              [data-loader-scrollhint]{display:none;}
+            }
+          `}</style>
+          <AnimatePresence mode="wait">
+            {phase === "loading" ? (
               <motion.div
-                initial={{ y: 70, opacity: 0, filter: "blur(10px)" }}
-                animate={
-                  phase === "name" || phase === "sub" || phase === "line"
-                    ? { y: 0, opacity: 1, filter: "blur(0px)" }
-                    : { y: 70, opacity: 0, filter: "blur(10px)" }
-                }
-                transition={{
-                  duration: 0.85,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className="flex flex-col sm:flex-row items-baseline justify-center tracking-tight"
+                key="loader-boot"
+                data-loader-boot
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0, filter: "blur(10px)", transition: { duration: 0.36 } }}
               >
-                <span className="font-display text-4xl sm:text-6xl md:text-7xl font-black uppercase text-foreground">
-                  RADITYA
-                </span>
-                <span className="font-display text-3xl sm:text-5xl md:text-6xl font-light text-primary sm:ml-2.5">
-                  .tech
-                </span>
+                <div data-loader-boot-card>
+                  <motion.div
+                    data-loader-boot-mark
+                    initial={{ opacity: 0, scale: 0.82, y: 12 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
+                    className="overflow-hidden p-1"
+                  >
+                    <img
+                      src="/logo.jpg"
+                      alt="Logo Raditya"
+                      className="size-full rounded-2xl object-cover"
+                    />
+                  </motion.div>
+                  <div>
+                    <h2>Menyiapkan portal</h2>
+                    <p>Memuat ruang masuk portfolio.</p>
+                  </div>
+                  <div data-loader-progress />
+                </div>
               </motion.div>
-            </div>
-
-            {/* Editorial Minimal Subtitle */}
-            <div className="overflow-hidden mt-2.5 sm:mt-3.5">
+            ) : (
               <motion.div
-                initial={{ y: 25, opacity: 0 }}
-                animate={
-                  phase === "sub" || phase === "line"
-                    ? { y: 0, opacity: 1 }
-                    : { y: 25, opacity: 0 }
-                }
-                transition={{
-                  duration: 0.7,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className="flex items-center justify-center gap-2.5 text-xs sm:text-sm font-sans tracking-wide text-muted-foreground"
+                key="loader-portal"
+                data-loader-scroll
+                data-loader-portal
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.42 }}
               >
-                <span>Fullstack Developer</span>
-                <span className="text-primary/70 font-mono">/</span>
-                <span>Cyber Security</span>
+                <GlyphPortal
+                  className="min-h-screen"
+                  word="PORTFOLIO"
+                  fontFamily='"Arial Black", Arial, sans-serif'
+                  fontWeight={900}
+                  scrollLength={2.7}
+                  interactive={false}
+                  annotations={false}
+                  onProgress={(progress) => {
+                    if (progress >= 0.94) finish();
+                  }}
+                  front={
+                    <div data-loader-front>
+                      <p data-loader-kicker>Raditya.tech</p>
+                      <p data-loader-copy>
+                        Scroll ke bawah untuk masuk
+                      </p>
+                      <span data-loader-scrollhint>Scroll down pelan untuk membuka portfolio</span>
+                    </div>
+                  }
+                  style={{
+                    "--gp-paper": "var(--color-background)",
+                    "--gp-ink": "color-mix(in oklab, var(--color-foreground) 85%, var(--color-primary))",
+                    "--gp-field": "color-mix(in oklab, var(--color-primary) 70%, var(--color-background))",
+                    "--gp-foreground": "var(--color-foreground)",
+                    fontFamily: "var(--font-display)",
+                  }}
+                  background={
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        transform: "scale(var(--gp-field-scale,1))",
+                        background:
+                          "radial-gradient(circle at 18% 12%, color-mix(in oklab, var(--color-primary-glow) 40%, transparent), transparent 36%), radial-gradient(circle at 84% 18%, color-mix(in oklab, var(--color-accent) 35%, transparent), transparent 32%), radial-gradient(circle at 48% 78%, color-mix(in oklab, var(--color-primary) 30%, transparent), transparent 46%), linear-gradient(180deg, #09090b 0%, #0d1527 50%, #050811 100%)",
+                      }}
+                    />
+                  }
+                >
+                  <div data-loader-content>
+                    <h1>
+                      Halo, saya <span className="text-gradient">{profile?.name ?? "Muhammad Raditya Anwar"}</span>
+                    </h1>
+                    <p>{profile?.role ?? "Cyber Security & Fullstack Developer"}</p>
+                    <button data-loader-enter type="button" onClick={finish}>
+                      Masuk ke portfolio
+                    </button>
+                  </div>
+                </GlyphPortal>
               </motion.div>
-            </div>
-
-            {/* Minimal Horizontal Loading Bar */}
-            <div className="relative mt-8 sm:mt-10 w-48 sm:w-64 h-[2px] bg-border/40 overflow-hidden rounded-full">
-              <motion.div
-                initial={{ x: "-100%" }}
-                animate={
-                  phase === "line"
-                    ? { x: "0%" }
-                    : { x: "-100%" }
-                }
-                transition={{
-                  duration: 1.15,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className="h-full w-full bg-gradient-to-r from-primary/40 via-primary to-primary-glow shadow-glow"
-              />
-            </div>
-          </div>
-
-          {/* Bottom Clean Coordinate / Footer Info */}
-          <div className="relative flex items-center justify-between w-full z-10 text-[11px] font-mono text-muted-foreground/60">
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            >
-              01 / 06
-            </motion.span>
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            >
-              &copy; 2026
-            </motion.span>
-          </div>
+            )}
+          </AnimatePresence>
+          <button data-loader-skip type="button" onClick={finish} className="flex items-center gap-1.5 cursor-pointer">
+            <span>Scroll Down / Lewati</span>
+            <span className="text-primary text-sm animate-bounce">↓</span>
+          </button>
         </motion.div>
       )}
     </AnimatePresence>

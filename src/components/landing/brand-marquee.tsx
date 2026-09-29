@@ -1,31 +1,30 @@
 import React from "react";
-import { Marquee } from "@/components/ui/3d-testimonails";
+import { InfiniteSlider } from "@/components/ui/infinite-slider";
+import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 import { useBrandStore } from "@/store/brandStore";
-import { ImageOff } from "lucide-react";
 
 const GRAYSCALE_FILTER =
-  "grayscale(100%) brightness(0.55) contrast(1.15)";
+  "grayscale(100%) brightness(0.65) contrast(1.15)";
 
-function BrandLogo({ name, logoUrl }: { name: string; logoUrl: string }) {
+function BrandLogoItem({ name, logoUrl }: { name: string; logoUrl: string }) {
   if (logoUrl) {
     return (
-      <img
-        src={logoUrl}
-        alt={name}
-        className="h-7 max-w-[90px] object-contain transition-all duration-300 group-hover:opacity-100"
-        style={{ filter: GRAYSCALE_FILTER }}
-        loading="lazy"
-      />
+      <div className="flex h-10 min-w-[110px] max-w-[150px] items-center justify-center px-3 py-1 rounded-xl bg-card/40 border border-border/40 hover:border-primary/50 transition-all duration-300">
+        <img
+          src={logoUrl}
+          alt={name}
+          className="max-h-7 max-w-[120px] object-contain transition-all duration-300 group-hover:brightness-100 group-hover:grayscale-0"
+          style={{ filter: GRAYSCALE_FILTER }}
+          loading="lazy"
+        />
+      </div>
     );
   }
-  // Fallback: styled text logo
+
   return (
-    <span
-      className="font-display text-sm font-bold tracking-tight"
-      style={{ filter: GRAYSCALE_FILTER, opacity: 0.7 }}
-    >
+    <div className="flex h-10 items-center justify-center px-4 rounded-xl bg-card/40 border border-border/40 font-display text-xs font-semibold tracking-wider text-muted-foreground uppercase hover:text-primary transition-colors">
       {name}
-    </span>
+    </div>
   );
 }
 
@@ -40,40 +39,48 @@ export function BrandMarquee() {
   if (brands.length === 0) return null;
 
   return (
-    <section className="relative w-full border-t border-b border-border/60 bg-surface/50 py-9 overflow-hidden select-none">
-      {/* Grid backdrop */}
-      <div className="absolute inset-0 grid-backdrop opacity-20 pointer-events-none" />
+    <section className="relative w-full border-t border-b border-border/60 bg-surface/40 py-10 overflow-hidden select-none">
+      {/* Background grid */}
+      <div className="absolute inset-0 grid-backdrop opacity-15 pointer-events-none" />
 
       {/* Tagline */}
-      <div className="relative mx-auto mb-5 text-center px-4">
-        <p className="text-[11px] font-mono font-medium tracking-[0.22em] text-muted-foreground uppercase">
-          Collaborated with Institutions, Industry Tools &amp; Frameworks
+      <div className="relative mx-auto mb-6 text-center px-4">
+        <p className="text-[11px] font-mono font-medium tracking-[0.25em] text-muted-foreground uppercase">
+          Bagian dari Organisasi, Pengalaman Bekerja Sama &amp; Alat Industri
         </p>
       </div>
 
-      {/* Marquee */}
-      <div className="relative flex w-full items-center overflow-hidden">
-        <Marquee pauseOnHover repeat={4} className="[--duration:38s] [--gap:2.5rem]">
-          {brands.map((brand, index) => (
+      {/* InfiniteSlider dengan ProgressiveBlur */}
+      <div className="relative h-[80px] w-full overflow-hidden flex items-center">
+        <InfiniteSlider
+          className="flex h-full w-full items-center"
+          duration={35}
+          gap={42}
+        >
+          {brands.map((brand, idx) => (
             <div
-              key={`${brand.id}-${index}`}
-              className="group flex items-center gap-3 px-5 py-2 cursor-default transition-transform duration-200 hover:scale-105"
+              key={`${brand.id}-${idx}`}
+              className="group flex items-center cursor-default transition-transform duration-200 hover:scale-105"
             >
-              {/* Logo / icon area */}
-              <div className="flex min-h-[2rem] items-center justify-center">
-                <BrandLogo name={brand.name} logoUrl={brand.logoUrl} />
-              </div>
-
-              {/* Divider dot */}
-              <div className="size-1 rounded-full bg-border/60 group-hover:bg-primary/40 transition-colors" />
+              <BrandLogoItem name={brand.name} logoUrl={brand.logoUrl} />
             </div>
           ))}
-        </Marquee>
+        </InfiniteSlider>
 
-        {/* Ambient fade edges */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-20 sm:w-36 bg-gradient-to-r from-background via-background/80 to-transparent z-10" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-20 sm:w-36 bg-gradient-to-l from-background via-background/80 to-transparent z-10" />
+        {/* Progressive Blur di sisi kiri dan kanan */}
+        <ProgressiveBlur
+          className="pointer-events-none absolute top-0 left-0 h-full w-[120px] sm:w-[220px] z-10"
+          direction="left"
+          blurIntensity={0.8}
+        />
+        <ProgressiveBlur
+          className="pointer-events-none absolute top-0 right-0 h-full w-[120px] sm:w-[220px] z-10"
+          direction="right"
+          blurIntensity={0.8}
+        />
       </div>
     </section>
   );
 }
+
+export default BrandMarquee;

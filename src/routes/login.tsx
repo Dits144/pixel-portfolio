@@ -114,7 +114,7 @@ function LoginPage() {
                 id="email"
                 type="email"
                 autoComplete="username"
-                placeholder="dits144@gmail.com"
+                placeholder="nama@email.com"
                 className="pl-9"
                 {...register("email")}
               />

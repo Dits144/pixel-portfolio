@@ -1,6 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import logoImg from "@/assets/logo.jpg";
+import { toast } from "sonner";
 import {
   Award,
   Briefcase,
@@ -52,6 +53,7 @@ export const adminNav = [
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (router) => router.location.pathname });
+  const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const queryClient = useQueryClient();
   const { isMobile, setOpenMobile } = useSidebar();
@@ -59,9 +61,15 @@ export function AppSidebar() {
   const isActive = (url: string) => (url === "/admin" ? pathname === url : pathname.startsWith(url));
 
   const handleLogout = async () => {
-    await authService.logout();
-    queryClient.clear();
-    setOpenMobile(false);
+    try {
+      await authService.logout();
+      queryClient.clear();
+      setOpenMobile(false);
+      toast.success("Berhasil keluar dari panel admin.");
+      navigate({ to: "/login" });
+    } catch {
+      toast.error("Gagal keluar.");
+    }
   };
 
   return (

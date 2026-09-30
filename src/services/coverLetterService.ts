@@ -1,8 +1,6 @@
 import { usePortfolioStore } from "@/store/portfolioStore";
 import type { CoverLetter, CoverLetterPayload, ID, Profile } from "@/types";
 
-import { createId, delay } from "./storage";
-
 export function formatIndonesianDate(date = new Date()): string {
   const months = [
     "Januari",
@@ -22,11 +20,14 @@ export function formatIndonesianDate(date = new Date()): string {
 }
 
 const buildDummyLetter = (payload: CoverLetterPayload, profile: Profile) => {
-  const { companyName, position, jobDescription, tone, language } = payload;
+  const { companyName, position, jobDescription, language } = payload;
   const todayIndo = formatIndonesianDate();
-  const dateStr = language === "en"
-    ? new Intl.DateTimeFormat("en-US", { day: "numeric", month: "long", year: "numeric" }).format(new Date())
-    : todayIndo;
+  const dateStr =
+    language === "en"
+      ? new Intl.DateTimeFormat("en-US", { day: "numeric", month: "long", year: "numeric" }).format(
+          new Date()
+        )
+      : todayIndo;
 
   const userEducation = profile.education || "S1 Teknik Informatika, STT Terpadu Nurul Fikri";
   const userLocation = profile.location || "Kabupaten Bogor, Jawa Barat";
@@ -34,16 +35,8 @@ const buildDummyLetter = (payload: CoverLetterPayload, profile: Profile) => {
   const userEmail = profile.email || "dits144@gmail.com";
   const userName = profile.name || "Muhammad Raditya Anwar";
 
-  // GEN AI paragraph generation logic based on prompt / position / job description
-  const jdLower = (jobDescription || "").toLowerCase();
-  const posLower = position.toLowerCase();
+  const aiParagraph = `Saya memiliki minat di bidang pengembangan web dan keamanan siber. Dalam pengembangan web, saya terbiasa menggunakan pendekatan vibe coding dengan bantuan AI untuk membangun aplikasi secara efisien sambil tetap meninjau hasilnya agar optimal. Saya siap terus belajar, bekerja dengan teliti, dan berkontribusi sesuai kebutuhan ${companyName || "perusahaan"}.`;
 
-  let aiParagraph = "";
-
-  // GEN AI paragraph logic: Sesuai teks persis yang diminta user, ringkas & tepat sasaran
-  aiParagraph = `Saya memiliki minat di bidang pengembangan web dan keamanan siber. Dalam pengembangan web, saya terbiasa menggunakan pendekatan vibe coding dengan bantuan AI untuk membangun aplikasi secara efisien sambil tetap meninjau hasilnya agar optimal. Saya siap terus belajar, bekerja dengan teliti, dan berkontribusi sesuai kebutuhan ${companyName || "perusahaan"}.`;
-
-  // Sesuai template persis yang diminta user (dengan baris Surat Lamaran Kerja dan layout rapi):
   return `Surat Lamaran Kerja
 Bogor, ${dateStr}
 
@@ -74,46 +67,71 @@ ${userName}`;
 };
 
 export const coverLetterService = {
-  /**
-   * Stub generator surat lamaran dengan Gen AI.
-   * Menyesuaikan posisi, nama perusahaan, kualifikasi dari profil dan input.
-   */
   async generateCoverLetter(payload: CoverLetterPayload): Promise<string> {
-    await delay(600); // simulasi proses Gen AI
     try {
       const profile = usePortfolioStore.getState().profile || ({} as Profile);
       return buildDummyLetter(payload, profile);
     } catch (err) {
       console.error("Error in generateCoverLetter:", err);
-      // Fallback generator jika ada field yang error
       const company = payload.companyName || "Perusahaan";
       const pos = payload.position || "Posisi";
       const dateStr = formatIndonesianDate();
-      return `Surat Lamaran Kerja\nBogor, ${dateStr}\n\nKepada Yth.\nBapak/Ibu HRD ${company}\ndi tempat\n\nPerihal: Lamaran Pekerjaan\n\nDengan hormat,\nBerdasarkan informasi lowongan pekerjaan yang saya peroleh, dengan ini saya mengajukan lamaran kerja untuk posisi ${pos} di ${company}. Adapun data diri saya sebagai berikut:\n\nNama            : Muhammad Raditya Anwar\nPendidikan      : S1 Teknik Informatika, STT Terpadu Nurul Fikri\nDomisili        : Kabupaten Bogor, Jawa Barat\nNo. telepon     : 0858 8284 6665\nEmail           : dits144@gmail.com\n\nSaya memiliki minat dan kemampuan di bidang web development dengan pendekatan modern (vibecoding) serta keamanan siber. Saya juga memiliki sertifikasi BNSP Junior Network Administrator serta pengalaman magang di bidang Pengolahan Data dan Informasi pada Direktorat Jenderal Pajak. Saya siap belajar, bekerja dengan teliti, dan berkontribusi sesuai kebutuhan ${company}.\n\nSebagai bahan pertimbangan, bersama surat ini saya lampirkan CV dan dokumen pendukung lainnya. Besar harapan saya untuk mendapat kesempatan mengikuti tahapan seleksi dan wawancara.\n\nDemikian surat lamaran ini saya sampaikan. Atas perhatian Bapak/Ibu, saya mengucapkan terima kasih.\n\nHormat saya,\n\nMuhammad Raditya Anwar`;
+      return `Surat Lamaran Kerja\nBogor, ${dateStr}\n\nKepada Yth.\nBapak/Ibu HRD ${company}\ndi tempat\n\nPerihal: Lamaran Pekerjaan\n\nDengan hormat,\nBerdasarkan informasi lowongan pekerjaan yang saya peroleh, dengan ini saya mengajukan lamaran kerja untuk posisi ${pos} di ${company}.`;
     }
   },
 
   // GET /api/cover-letters
   async list(): Promise<CoverLetter[]> {
-    await delay(150);
+    try {
+      const res = await fetch("/api/cover-letters", { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          usePortfolioStore.setState({ coverLetters: data });
+          return data;
+        }
+      }
+    } catch {}
+
     return usePortfolioStore.getState().coverLetters;
   },
 
   // POST /api/cover-letters
   async save(payload: CoverLetterPayload & { content: string }): Promise<CoverLetter> {
-    await delay(300);
-    const letter: CoverLetter = {
+    try {
+      const res = await fetch("/api/cover-letters", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        const created = await res.json();
+        usePortfolioStore.getState().addCoverLetter(created);
+        return created;
+      }
+    } catch (err) {
+      console.warn("Gagal POST /api/cover-letters:", err);
+    }
+
+    const fallback: CoverLetter = {
       ...payload,
-      id: createId("cl"),
+      id: `cl-${Date.now()}`,
       createdAt: new Date().toISOString(),
     };
-    usePortfolioStore.getState().addCoverLetter(letter);
-    return letter;
+    usePortfolioStore.getState().addCoverLetter(fallback);
+    return fallback;
   },
 
   // DELETE /api/cover-letters/:id
   async remove(id: ID): Promise<void> {
-    await delay(200);
     usePortfolioStore.getState().removeCoverLetter(id);
+
+    try {
+      await fetch(`/api/cover-letters/${id}`, {
+        method: "DELETE",
+      });
+    } catch (err) {
+      console.warn(`Gagal DELETE cover letter ${id}:`, err);
+    }
   },
 };

@@ -2,13 +2,21 @@ import { radityaDB } from "@/lib/database";
 import { usePortfolioStore } from "@/store/portfolioStore";
 import type { Profile } from "@/types";
 
-import { delay } from "./storage";
-
 export const profileService = {
-  // TODO: GET /api/profile
+  // GET /api/profile
   async get(): Promise<Profile> {
-    await delay(150);
-    // Prioritaskan dari radityaDB jika ada
+    try {
+      const res = await fetch("/api/profile", { cache: "no-store" });
+      if (res.ok) {
+        const prof = await res.json();
+        if (prof && prof.name) {
+          usePortfolioStore.getState().setProfile(prof);
+          return prof;
+        }
+      }
+    } catch {}
+
+    // Fallback ke IndexedDB atau Store
     try {
       const stored = await radityaDB.getAll<{ id: string } & Profile>("profile");
       const first = stored[0];
@@ -17,25 +25,26 @@ export const profileService = {
         usePortfolioStore.getState().setProfile(prof as Profile);
         return prof as Profile;
       }
-    } catch (e) {
-      console.warn("Gagal load profile dari IndexedDB, fallback ke store:", e);
-    }
+    } catch {}
+
     return usePortfolioStore.getState().profile;
   },
 
-  // TODO: PUT /api/profile
+  // PUT /api/profile
   async update(profile: Profile): Promise<Profile> {
-    await delay();
-    // 1. Simpan ke memory store untuk UI reaktif instan
     usePortfolioStore.getState().setProfile(profile);
-    
-    // 2. Simpan ke IndexedDB (mendukung berkas Base64 gigantik tanpa batasan kuota localStorage)
+    radityaDB.put("profile", { id: "main", ...profile }).catch(() => {});
+
     try {
-      await radityaDB.put("profile", { id: "main", ...profile });
+      await fetch("/api/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profile),
+      });
     } catch (e) {
-      console.error("Gagal simpan profile ke IndexedDB:", e);
+      console.error("Gagal update profile ke server API:", e);
     }
-    
+
     return profile;
   },
 };

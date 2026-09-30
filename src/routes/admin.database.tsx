@@ -47,10 +47,17 @@ export default function DatabaseManagerPage() {
   const loadStatus = async () => {
     setLoading(true);
     try {
+      const res = await fetch("/api/status", { cache: "no-store" });
+      if (res.ok) {
+        const s = await res.json();
+        setStatus(s);
+      } else {
+        const s = await radityaDB.getStatus();
+        setStatus(s);
+      }
+    } catch {
       const s = await radityaDB.getStatus();
       setStatus(s);
-    } catch (e) {
-      console.error(e);
     } finally {
       setLoading(false);
     }
@@ -62,8 +69,9 @@ export default function DatabaseManagerPage() {
 
   const handleExport = async () => {
     try {
-      toast.loading("Mengekspor seluruh database...");
-      const data = await radityaDB.exportAll();
+      toast.loading("Mengekspor seluruh database server...");
+      const res = await fetch("/api/database/export");
+      const data = res.ok ? await res.json() : await radityaDB.exportAll();
       const blob = new Blob([JSON.stringify(data, null, 2)], {
         type: "application/json",
       });
@@ -108,11 +116,12 @@ export default function DatabaseManagerPage() {
   const handleReset = async () => {
     setResetting(true);
     try {
+      await fetch("/api/database/reset", { method: "POST" });
       await radityaDB.reset();
       await loadStatus();
       refresh();
       setResetDialogOpen(false);
-      toast.success("Database berhasil direset ke pengaturan awal.");
+      toast.success("Database di VPS & lokal berhasil direset ke awal.");
     } catch (err) {
       toast.error("Gagal mereset database.");
     } finally {

@@ -1,37 +1,78 @@
+import { initialPortfolioData } from "@/mock-data";
 import { usePortfolioStore } from "@/store/portfolioStore";
 import type { ID, Message } from "@/types";
 
-import { createId, delay } from "./storage";
-
 export const messageService = {
-  // TODO: GET /api/messages
+  // GET /api/messages
   async list(): Promise<Message[]> {
-    await delay(150);
-    return usePortfolioStore.getState().messages;
+    try {
+      const res = await fetch("/api/messages", { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          usePortfolioStore.setState({ messages: data });
+          return data;
+        }
+      }
+    } catch {}
+
+    const stored = usePortfolioStore.getState().messages;
+    if (stored && stored.length > 0) return stored;
+    return initialPortfolioData.messages || [];
   },
 
-  // TODO: POST /api/messages (dipakai contact form publik)
+  // POST /api/messages
   async send(input: { name: string; email: string; content: string }): Promise<Message> {
-    await delay(800);
-    const message: Message = {
+    try {
+      const res = await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(input),
+      });
+      if (res.ok) {
+        const created = await res.json();
+        usePortfolioStore.getState().addMessage(created);
+        return created;
+      }
+    } catch (err) {
+      console.warn("Gagal POST /api/messages:", err);
+    }
+
+    const fallback: Message = {
       ...input,
-      id: createId("ms"),
+      id: `ms-${Date.now()}`,
       read: false,
       createdAt: new Date().toISOString(),
     };
-    usePortfolioStore.getState().addMessage(message);
-    return message;
+    usePortfolioStore.getState().addMessage(fallback);
+    return fallback;
   },
 
-  // TODO: PATCH /api/messages/:id
+  // PATCH / PUT /api/messages/:id
   async setRead(id: ID, read: boolean): Promise<void> {
-    await delay(150);
     usePortfolioStore.getState().updateMessage(id, { read });
+
+    try {
+      await fetch(`/api/messages/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ read }),
+      });
+    } catch (err) {
+      console.warn(`Gagal update read status message ${id}:`, err);
+    }
   },
 
-  // TODO: DELETE /api/messages/:id
+  // DELETE /api/messages/:id
   async remove(id: ID): Promise<void> {
-    await delay(200);
     usePortfolioStore.getState().removeMessage(id);
+
+    try {
+      await fetch(`/api/messages/${id}`, {
+        method: "DELETE",
+      });
+    } catch (err) {
+      console.warn(`Gagal DELETE message ${id}:`, err);
+    }
   },
 };

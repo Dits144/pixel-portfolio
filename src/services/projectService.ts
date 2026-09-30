@@ -1,36 +1,77 @@
+import { initialPortfolioData } from "@/mock-data";
 import { usePortfolioStore } from "@/store/portfolioStore";
 import type { ID, Project } from "@/types";
 
-import { createId, delay } from "./storage";
-
 export const projectService = {
-  // TODO: GET /api/projects
+  // GET /api/projects
   async list(): Promise<Project[]> {
-    await delay(150);
-    return usePortfolioStore.getState().projects;
+    try {
+      const res = await fetch("/api/projects", { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          usePortfolioStore.setState({ projects: data });
+          return data;
+        }
+      }
+    } catch {}
+
+    const stored = usePortfolioStore.getState().projects;
+    if (stored && stored.length > 0) return stored;
+    return initialPortfolioData.projects || [];
   },
 
-  // TODO: POST /api/projects
+  // POST /api/projects
   async create(input: Omit<Project, "id" | "createdAt">): Promise<Project> {
-    await delay();
-    const project: Project = {
+    try {
+      const res = await fetch("/api/projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...input, createdAt: new Date().toISOString().slice(0, 10) }),
+      });
+      if (res.ok) {
+        const created = await res.json();
+        usePortfolioStore.getState().addProject(created);
+        return created;
+      }
+    } catch (err) {
+      console.warn("Gagal POST /api/projects:", err);
+    }
+
+    const fallback: Project = {
       ...input,
-      id: createId("pr"),
+      id: `pr-${Date.now()}`,
       createdAt: new Date().toISOString().slice(0, 10),
     };
-    usePortfolioStore.getState().addProject(project);
-    return project;
+    usePortfolioStore.getState().addProject(fallback);
+    return fallback;
   },
 
-  // TODO: PUT /api/projects/:id
+  // PUT /api/projects/:id
   async update(id: ID, patch: Partial<Project>): Promise<void> {
-    await delay();
     usePortfolioStore.getState().updateProject(id, patch);
+
+    try {
+      await fetch(`/api/projects/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(patch),
+      });
+    } catch (err) {
+      console.warn(`Gagal PUT /api/projects/${id}:`, err);
+    }
   },
 
-  // TODO: DELETE /api/projects/:id
+  // DELETE /api/projects/:id
   async remove(id: ID): Promise<void> {
-    await delay(200);
     usePortfolioStore.getState().removeProject(id);
+
+    try {
+      await fetch(`/api/projects/${id}`, {
+        method: "DELETE",
+      });
+    } catch (err) {
+      console.warn(`Gagal DELETE /api/projects/${id}:`, err);
+    }
   },
 };

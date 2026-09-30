@@ -47,6 +47,13 @@ function isH3SwallowedErrorBody(body: string): boolean {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      // Intercept REST API routes to query VPS SQLite database directly
+      const { handleApiRequest } = await import("./lib/api-handler.server");
+      const apiResponse = await handleApiRequest(request);
+      if (apiResponse) {
+        return apiResponse;
+      }
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);
